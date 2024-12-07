@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "39690319251",
+    "project_id": "whats-clone-62037",
+    "storage_bucket": "whats-clone-62037.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39690319251:android:b812579772df1c728de466",
+        "android_client_info": {
+          "package_name": "com.mohammed_ramadan.whats_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV5PpNvqg4MgpBy_LPoyncfd84p3RaT2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
