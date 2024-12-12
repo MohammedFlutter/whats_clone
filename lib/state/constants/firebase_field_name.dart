@@ -8,7 +8,7 @@ class FirebaseFieldName {
   static const name = 'name';
   static const avatarUrl = 'avatar_url';
   static const email = 'email';
-  static const phone  = 'phone';
+  static const phoneNumber  = 'phone_number';
   static const updatedAt = 'updatedAt';
   static const createdAt = 'createdAt';
 }
