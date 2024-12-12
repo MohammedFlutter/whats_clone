@@ -31,4 +31,9 @@ class Authenticator {
       return AuthResult.failed;
     }
   }
+
+  Future<void> signOut() async {
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
+  }
 }

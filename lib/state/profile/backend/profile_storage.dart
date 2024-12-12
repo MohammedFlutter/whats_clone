@@ -30,7 +30,7 @@ class ProfileStorage {
       return false; // Profile already exists
     }
 
-    final isPhoneUnique = await _isPhoneUnique(phone: profile.phone);
+    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber);
     if (!isPhoneUnique) {
       throw Exception("Phone number already exists.");
     }
@@ -55,8 +55,8 @@ class ProfileStorage {
 
     // Ensure phone number uniqueness if it's updated
     final existingProfile = Profile.fromJson(querySnapshot.docs.first.data());
-    if (existingProfile.phone != profile.phone) {
-      final isPhoneUnique = await _isPhoneUnique(phone: profile.phone);
+    if (existingProfile.phoneNumber != profile.phoneNumber) {
+      final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber);
       if (!isPhoneUnique) {
         throw Exception("Phone number already exists.");
       }
@@ -69,7 +69,7 @@ class ProfileStorage {
   /// Checks if the phone number is unique across profiles.
   Future<bool> _isPhoneUnique({required String phone}) async {
     final querySnapshot = await _profilesCollection
-        .where(FirebaseFieldName.phone, isEqualTo: phone)
+        .where(FirebaseFieldName.phoneNumber, isEqualTo: phone)
         .limit(1)
         .get();
 
