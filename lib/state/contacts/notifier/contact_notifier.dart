@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_clone/state/contacts/backend/contact_service.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
+import 'package:whats_clone/utils/logger.dart';
 
 class ContactNotifier extends StateNotifier<AsyncValue<List<AppContact>>> {
   final ContactServices _contactServices;
@@ -11,18 +12,21 @@ class ContactNotifier extends StateNotifier<AsyncValue<List<AppContact>>> {
     try {
       final contacts = await _contactServices.appContacts;
       state = AsyncValue.data(contacts);
-    } catch (error,stackTrace) {
-      state = AsyncValue.error(error.toString(),stackTrace);
+    } catch (error, stackTrace) {
+      log.e(error);
+      state = AsyncValue.error(error.toString(), stackTrace);
     }
   }
 
   Future<void> searchContacts({String? name, String? phone}) async {
     try {
       state = const AsyncValue.loading();
-      final contacts = await _contactServices.searchContacts(name: name, phone: phone);
+      final contacts =
+          await _contactServices.searchContacts(name: name, phone: phone);
       state = AsyncValue.data(contacts);
-    } catch (error,stackTrace) {
-      state = AsyncValue.error(error,stackTrace);
+    } catch (error, stackTrace) {
+      log.e(error);
+      state = AsyncValue.error(error, stackTrace);
     }
   }
 }
