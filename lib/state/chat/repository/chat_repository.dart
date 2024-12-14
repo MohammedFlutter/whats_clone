@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:uuid/uuid.dart';
 import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/constants/firebase_collection_name.dart';
@@ -7,6 +8,8 @@ import 'package:hive/hive.dart';
 class ChatRepository {
   final _chatsCollection =
       FirebaseFirestore.instance.collection(FirebaseCollectionName.chats);
+
+  final _chatsDatabaseRef= FirebaseDatabase.instance.ref(FirebaseCollectionName.chats);
   final Uuid _uuid = const Uuid();
 
   final Box<Chat> _chatBox;
@@ -61,6 +64,8 @@ class ChatRepository {
   Future<void> deleteChat(String chatId) async {
     // Delete chat from Firestore
     await _chatsCollection.doc(chatId).delete();
+    await _chatsDatabaseRef.child(chatId).remove();
+
 
     // Delete chat locally
     await _chatBox.delete(chatId);
