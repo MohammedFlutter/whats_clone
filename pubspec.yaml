@@ -29,6 +29,7 @@ dependencies:
   firebase_messaging: ^15.1.6
   firebase_auth: ^5.3.4
   cloud_firestore: ^5.5.1
+  firebase_database: ^11.2.0
   google_sign_in: ^6.2.1
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
