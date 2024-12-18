@@ -23,9 +23,9 @@ class AppTheme {
         error: AppColors.error,
       ),
       textTheme: TextTheme(
-        displayLarge:
+        headlineLarge:
             AppTextStyles.headline1.copyWith(color: AppColors.textPrimary),
-        displayMedium:
+        headlineMedium:
             AppTextStyles.headline2.copyWith(color: AppColors.textPrimary),
         bodyLarge:
             AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
@@ -53,13 +53,17 @@ class AppTheme {
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
+
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.primaryLight,
           foregroundColor: AppColors.textOnPrimary,
+          textStyle: AppTextStyles.subHeadline2
+                .copyWith(color: AppColors.offWhite),
+
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
@@ -88,9 +92,9 @@ class AppTheme {
         error: AppColors.error,
       ),
       textTheme: TextTheme(
-        displayLarge:
+        headlineLarge:
             AppTextStyles.headline1.copyWith(color: AppColors.textPrimaryDark),
-        displayMedium:
+        headlineMedium:
             AppTextStyles.headline2.copyWith(color: AppColors.textPrimaryDark),
         bodyLarge:
             AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimaryDark),
@@ -118,16 +122,17 @@ class AppTheme {
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          // backgroundColor: AppColors.primaryDark,
-          // foregroundColor: AppColors.textOnPrimaryDark,
 
-          textStyle:
-              AppTextStyles.subHeadline2.copyWith(color: AppColors.offWhite),
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.primaryDark,
+          foregroundColor: AppColors.textOnPrimary,
+          textStyle: AppTextStyles.subHeadline2
+              ,
+
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric( vertical: 16),
         ),
       ),
     );

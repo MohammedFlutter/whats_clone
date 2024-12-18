@@ -24,30 +24,28 @@ class ProfileStorage {
   }
 
   /// Adds a new profile if it doesn't exist and the phone number is unique.
-  Future<bool> createProfile({required Profile profile}) async {
+  Future<void> createProfile({required Profile profile}) async {
     final existingProfile = await getProfile(userId: profile.userId);
     if (existingProfile != null) {
-      return false; // Profile already exists
+      throw Exception("Profile already exists.");
     }
 
-    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber);
+    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber!);
     if (!isPhoneUnique) {
       throw Exception("Phone number already exists.");
     }
 
     await _profilesCollection.add(profile.toJson());
-    return true;
   }
 
   /// Updates an existing profile if it exists.
-  Future<bool> updateProfile({required Profile profile}) async {
+  Future<void> updateProfile({required Profile profile}) async {
     final querySnapshot = await _profilesCollection
         .where(FirebaseFieldName.userId, isEqualTo: profile.userId)
         .limit(1)
         .get();
 
     if (querySnapshot.docs.isEmpty) {
-
       throw Exception("Profile not found.");
     }
 
@@ -56,14 +54,13 @@ class ProfileStorage {
     // Ensure phone number uniqueness if it's updated
     final existingProfile = Profile.fromJson(querySnapshot.docs.first.data());
     if (existingProfile.phoneNumber != profile.phoneNumber) {
-      final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber);
+      final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber!);
       if (!isPhoneUnique) {
         throw Exception("Phone number already exists.");
       }
     }
 
     await docRef.update(profile.toJson());
-    return true;
   }
 
   /// Checks if the phone number is unique across profiles.

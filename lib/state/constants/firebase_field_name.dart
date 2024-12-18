@@ -9,6 +9,6 @@ class FirebaseFieldName {
   static const avatarUrl = 'avatar_url';
   static const email = 'email';
   static const phoneNumber  = 'phone_number';
-  static const updatedAt = 'updatedAt';
-  static const createdAt = 'createdAt';
+  static const updatedAt = 'updated_at';
+  static const createdAt = 'created_at';
 }

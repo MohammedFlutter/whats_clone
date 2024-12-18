@@ -8,10 +8,10 @@ part 'profile.g.dart';
 class Profile with _$Profile {
   const factory Profile({
     @JsonKey(name: 'uid') required String userId,
-    required String name,
-    required String email,
-    @JsonKey(name: 'phone_number') required String phoneNumber,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
+     String? name,
+    String? email,
+    @JsonKey(name: 'phone_number')  String? phoneNumber,
+    @JsonKey(name: 'created_at')  DateTime? createdAt,
     @JsonKey(name: 'updated_at') DateTime? updatedAt,
     @JsonKey(name: 'avatar_url') String? avatarUrl,
     String? bio,

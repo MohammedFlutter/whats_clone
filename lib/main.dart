@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:whats_clone/core/routes/app_router.dart';
 import 'package:whats_clone/core/theme/app_theme.dart';
+import 'package:whats_clone/state/chat/models/chat.dart';
+import 'package:whats_clone/state/constants/hive_box_name.dart';
 
 import 'firebase_options.dart';
 
@@ -15,6 +19,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await initializeHive();
   FirebaseDatabase.instance
       .setPersistenceCacheSizeBytes(10 * 1024 * 1024); // 10 MB cache size
   LicenseRegistry.addLicense(() async* {
@@ -25,12 +30,18 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
+Future<void> initializeHive() async {
+  await Hive.initFlutter();
+  await Hive.openBox<bool>(HiveBoxName.onboarding);
+  await Hive.openBox<Chat>(HiveBoxName.chats);
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme.copyWith(
           textTheme:
@@ -38,7 +49,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme.copyWith(
           textTheme: GoogleFonts.mulishTextTheme(AppTheme.darkTheme.textTheme)),
       themeMode: ThemeMode.light,
-      home: const HomePage(),
+      routerConfig: appRouter,
     );
   }
 }
