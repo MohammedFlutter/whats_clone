@@ -10,6 +10,7 @@ import 'package:whats_clone/core/routes/app_router.dart';
 import 'package:whats_clone/core/theme/app_theme.dart';
 import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
+import 'package:whats_clone/state/profile/models/profile.dart';
 
 import 'firebase_options.dart';
 
@@ -34,6 +35,9 @@ Future<void> initializeHive() async {
   await Hive.initFlutter();
   await Hive.openBox<bool>(HiveBoxName.onboarding);
   await Hive.openBox<Chat>(HiveBoxName.chats);
+  await Hive.openBox<Profile>(HiveBoxName.profiles);
+  await Hive.openBox<bool>(HiveBoxName.profileCompletion);
+
 }
 
 class MyApp extends StatelessWidget {

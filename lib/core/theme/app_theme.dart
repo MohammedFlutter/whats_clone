@@ -37,7 +37,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         // fillColor: Colors.white,
-
+        contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
         hintStyle: AppTextStyles.bodyLarge.copyWith(color: AppColors.disable),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
@@ -53,13 +53,11 @@ class AppTheme {
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
-
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.primaryLight,
           foregroundColor: AppColors.textOnPrimary,
-          textStyle: AppTextStyles.subHeadline2
-                .copyWith(color: AppColors.offWhite),
-
+          textStyle:
+              AppTextStyles.subHeadline2.copyWith(color: AppColors.offWhite),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -100,10 +98,10 @@ class AppTheme {
             AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimaryDark),
         bodyMedium:
             AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimaryDark),
-
       ),
       // dividerColor: AppColors.divider,
       inputDecorationTheme: InputDecorationTheme(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         filled: true,
         // fillColor: Colors.white,
         hintStyle:
@@ -122,17 +120,14 @@ class AppTheme {
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
-
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.primaryDark,
           foregroundColor: AppColors.textOnPrimary,
-          textStyle: AppTextStyles.subHeadline2
-              ,
-
+          textStyle: AppTextStyles.subHeadline2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: const EdgeInsets.symmetric( vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
         ),
       ),
     );

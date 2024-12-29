@@ -7,6 +7,7 @@ import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
+import 'package:whats_clone/view/profile/widgets/FormContent.dart';
 
 class CreateProfilePage extends ConsumerStatefulWidget {
   const CreateProfilePage({super.key});
@@ -16,82 +17,88 @@ class CreateProfilePage extends ConsumerStatefulWidget {
 }
 
 class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _boiController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  final _nameController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _phoneController = TextEditingController();
+  String _dialCode = '+20';
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) => _listenToProfileChanges,
+    );
+  }
+
+  void _listenToProfileChanges() {
     ref.listen(
       profileNotifierProvider,
       (previous, next) {
         if (next.status == ProfileStatus.created) {
           context.goNamed(RouteName.home);
         }
-        // next.whenOrNull(success: );
       },
     );
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(Strings.createProfile),
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(title: const Text(Strings.createProfile)),
+        body: _buildBody(context),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 46),
-            const CircleAvatar(
-              radius: 100,
-              child: Icon(Icons.person_outline_rounded),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Form(
+              key: _formKey,
+              child: FormContent(
+                nameController: _nameController,
+                bioController: _bioController,
+                phoneController: _phoneController,
+                onDialCodeChanged: (code) => _dialCode = code,
+                onCreate: _handleSave,
+                dialCode: _dialCode,
+              ),
             ),
-            const SizedBox(height: 30),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(hintText: Strings.name),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _boiController,
-              decoration: const InputDecoration(hintText: Strings.bio),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _phoneController,
-              decoration: const InputDecoration(hintText: Strings.phone),
-            ),
-            const SizedBox(height: 12),
-            Row(children: [
-              Expanded(
-                  child: FilledButton(
-                      onPressed: () => _createProfile(ref),
-                      child: const Text(Strings.save)))
-            ]),
-            const SizedBox(height: 32),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  void _createProfile(
-    WidgetRef ref,
-  ) async {
-    final user = ref.watch(authProvider);
-    final name = _nameController.text;
-    final bio = _boiController.text;
-    final phoneNumber = _phoneController.text;
+  Future<void> _handleSave() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final user = ref.read(authProvider);
     final profile = Profile(
-        userId: user.userId!,
-        name: name,
-        email: user.email,
-        phoneNumber: phoneNumber,
-        bio: bio,
-        createdAt: DateTime.now());
+      userId: user.userId!,
+      name: _nameController.text,
+      email: user.email,
+      phoneNumber: '$_dialCode${_phoneController.text}',
+      bio: _bioController.text,
+      createdAt: DateTime.now(),
+    );
+
     await ref.read(profileNotifierProvider.notifier).createProfile(profile);
-    final profileStatus = ref.read(profileNotifierProvider).status;
-    if (mounted && profileStatus == ProfileStatus.created) {
-      context.goNamed(RouteName.home);
-    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _bioController.dispose();
+    _phoneController.dispose();
+    super.dispose();
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
 import 'package:whats_clone/view/constants/assets.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 
@@ -10,6 +11,7 @@ class OnboardingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final onboardingEvent = ref.read(onboardingProvider.notifier);
     return Scaffold(
       // appBar: AppBar(),
       body: SafeArea(
@@ -52,7 +54,10 @@ class OnboardingPage extends ConsumerWidget {
                   children: [
                     Expanded(
                         child: FilledButton(
-                            onPressed: () => context.goNamed(RouteName.login),
+                            onPressed: () {
+                              onboardingEvent.setOnboardingComplete();
+                              context.goNamed(RouteName.login);
+                            },
                             child: const Text(
                               Strings.startMessaging,
                               // style: AppTextStyles.subHeadline2

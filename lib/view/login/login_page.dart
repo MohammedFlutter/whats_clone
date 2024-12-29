@@ -14,10 +14,9 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.authResult == AuthResult.success) {
-        context.go(RouteName.home);
+        context.goNamed(RouteName.home);
       } else if (next.authResult == AuthResult.failed) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Authentication Failed: ')),

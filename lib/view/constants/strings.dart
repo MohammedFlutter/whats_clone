@@ -4,15 +4,13 @@ import 'package:flutter/foundation.dart' show immutable;
 class Strings {
   const Strings._();
 
-  static const appTitle ='Chat Me';
-
+  static const appTitle = 'Chat Me';
 
   //Onboarding Page
   static const onboardingTitle =
       'Connect easily with your family and friends over countries';
   static const termsAndPrivacyPolicy = 'Terms & Privacy Policy';
   static const startMessaging = 'Start Messaging';
-
 
   //Login Page
   static const signIn = 'Sign In';
@@ -26,8 +24,10 @@ class Strings {
   static const editProfile = 'Edit Profile';
   static const name = 'Name';
   static const bio = 'Bio';
-  static const phone = 'Phone';
-  static const save  = 'Save';
-
-
+  static const phone = 'Phone Number';
+  static const save = 'Save';
+  static const searchCountry = 'Search country';
+  static const nameIsRequired = 'Name is required';
+  static const phoneNumberIsRequired = 'Phone number is required';
+  static const invalidPhoneNumber = 'Invalid phone number';
 }

@@ -13,14 +13,17 @@ class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  _SplashPageState createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
 class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _initializeApp();
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) => _initializeApp(),
+    );
   }
 
   Future<void> _initializeApp() async {
@@ -41,7 +44,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     // Load user profile
     try {
       final userId = authState.userId!;
-
 
       await ref
           .read(profileNotifierProvider.notifier)
