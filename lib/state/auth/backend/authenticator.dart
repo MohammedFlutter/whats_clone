@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:whats_clone/utils/logger.dart';
+import 'package:whats_clone/core/utils/logger.dart';
 
 class Authenticator {
   User? get currentUser => FirebaseAuth.instance.currentUser;
@@ -23,7 +23,7 @@ class Authenticator {
         accessToken: googleSignInAuth.accessToken);
 
     try {
-      FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
       return AuthResult.success;
     } catch (e) {
       log.e(e);

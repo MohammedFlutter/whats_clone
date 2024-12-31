@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/chat/repository/chat_repository.dart';
-import 'package:whats_clone/utils/logger.dart';
+import 'package:whats_clone/core/utils/logger.dart';
 
 class ChatNotifier extends StateNotifier<AsyncValue<List<Chat>>> {
   final ChatRepository _chatRepository;

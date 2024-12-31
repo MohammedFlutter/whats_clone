@@ -23,9 +23,9 @@ class AppTheme {
         error: AppColors.error,
       ),
       textTheme: TextTheme(
-        displayLarge:
+        headlineLarge:
             AppTextStyles.headline1.copyWith(color: AppColors.textPrimary),
-        displayMedium:
+        headlineMedium:
             AppTextStyles.headline2.copyWith(color: AppColors.textPrimary),
         bodyLarge:
             AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
@@ -37,7 +37,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         // fillColor: Colors.white,
-
+        contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
         hintStyle: AppTextStyles.bodyLarge.copyWith(color: AppColors.disable),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
@@ -56,10 +56,12 @@ class AppTheme {
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.primaryLight,
           foregroundColor: AppColors.textOnPrimary,
+          textStyle:
+              AppTextStyles.subHeadline2.copyWith(color: AppColors.offWhite),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
@@ -88,18 +90,18 @@ class AppTheme {
         error: AppColors.error,
       ),
       textTheme: TextTheme(
-        displayLarge:
+        headlineLarge:
             AppTextStyles.headline1.copyWith(color: AppColors.textPrimaryDark),
-        displayMedium:
+        headlineMedium:
             AppTextStyles.headline2.copyWith(color: AppColors.textPrimaryDark),
         bodyLarge:
             AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimaryDark),
         bodyMedium:
             AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimaryDark),
-
       ),
       // dividerColor: AppColors.divider,
       inputDecorationTheme: InputDecorationTheme(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         filled: true,
         // fillColor: Colors.white,
         hintStyle:
@@ -119,15 +121,13 @@ class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          // backgroundColor: AppColors.primaryDark,
-          // foregroundColor: AppColors.textOnPrimaryDark,
-
-          textStyle:
-              AppTextStyles.subHeadline2.copyWith(color: AppColors.offWhite),
+          backgroundColor: AppColors.primaryDark,
+          foregroundColor: AppColors.textOnPrimary,
+          textStyle: AppTextStyles.subHeadline2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 16),
         ),
       ),
     );

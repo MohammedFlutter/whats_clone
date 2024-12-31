@@ -7,13 +7,15 @@ part 'auth_state.freezed.dart';
 class AuthState with _$AuthState {
   const factory AuthState({
     required AuthResult? authResult,
-    required String? userId,
     required bool isLoading,
+     String? userId,
+     String? email,
   }) = _AuthState;
 
   factory AuthState.unknown() => const AuthState(
         isLoading: false,
         userId: null,
+        email: null,
         authResult: null,
       );
 }

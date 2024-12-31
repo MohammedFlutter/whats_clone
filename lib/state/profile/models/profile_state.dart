@@ -5,16 +5,21 @@ part 'profile_state.freezed.dart';
 
 @freezed
 class ProfileState with _$ProfileState {
-
   const factory ProfileState({
     Profile? profile,
-    @Default(false) bool isLoading,
     String? errorMessage,
+    @Default(ProfileStatus.initial) ProfileStatus status,
   }) = _ProfileState;
 
   const ProfileState._();
+}
 
-  bool get hasError => errorMessage != null;
-  bool get isLoaded => profile != null && !isLoading && errorMessage == null;
-
+enum ProfileStatus {
+  initial,
+  loading,
+  loaded,
+  noProfile,
+  created,
+  updated,
+  error,
 }
