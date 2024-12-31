@@ -15,6 +15,7 @@ class Strings {
   //Login Page
   static const signIn = 'Sign In';
   static const signInWithGoogle = 'Sign In with Google';
+  static const authenticationFailed = 'Authentication Failed';
   static const loginTitle = 'Welcome back to $appTitle';
   static const loginDescription =
       'Sign in with your Google account to access all features and enjoy a seamless experience.';
@@ -30,4 +31,7 @@ class Strings {
   static const nameIsRequired = 'Name is required';
   static const phoneNumberIsRequired = 'Phone number is required';
   static const invalidPhoneNumber = 'Invalid phone number';
+  static const profilePhoto = 'Profile photo';
+  static const camera = 'Camera';
+  static const gallery = 'Gallery';
 }

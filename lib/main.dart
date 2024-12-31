@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whats_clone/core/routes/app_router.dart';
+import 'package:whats_clone/core/secrets.dart';
 import 'package:whats_clone/core/theme/app_theme.dart';
 import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
@@ -23,6 +25,11 @@ Future<void> main() async {
   await initializeHive();
   FirebaseDatabase.instance
       .setPersistenceCacheSizeBytes(10 * 1024 * 1024); // 10 MB cache size
+  await Supabase.initialize(
+    url: 'https://tsfnxntivmgopccxbuis.supabase.co',
+    anonKey: supabaseApikey,
+  );
+
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('assets/fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['assets/fonts'], license);
@@ -38,6 +45,9 @@ Future<void> initializeHive() async {
   await Hive.openBox<Profile>(HiveBoxName.profiles);
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
 
+  Hive.registerAdapter(ProfileAdapter());
+  // Hive.registerAdapter(ChatAdapter());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -52,7 +62,7 @@ class MyApp extends StatelessWidget {
               GoogleFonts.mulishTextTheme(AppTheme.lightTheme.textTheme)),
       darkTheme: AppTheme.darkTheme.copyWith(
           textTheme: GoogleFonts.mulishTextTheme(AppTheme.darkTheme.textTheme)),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       routerConfig: appRouter,
     );
   }

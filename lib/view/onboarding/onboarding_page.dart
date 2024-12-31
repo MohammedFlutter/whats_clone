@@ -5,6 +5,7 @@ import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
 import 'package:whats_clone/view/constants/assets.dart';
 import 'package:whats_clone/view/constants/strings.dart';
+import 'package:whats_clone/view/widgets/app_fill_button.dart';
 
 class OnboardingPage extends ConsumerWidget {
   const OnboardingPage({super.key});
@@ -50,21 +51,12 @@ class OnboardingPage extends ConsumerWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: FilledButton(
-                            onPressed: () {
-                              onboardingEvent.setOnboardingComplete();
-                              context.goNamed(RouteName.login);
-                            },
-                            child: const Text(
-                              Strings.startMessaging,
-                              // style: AppTextStyles.subHeadline2
-                              //     .copyWith(color: AppColors.offWhite),
-                            )))
-                  ],
-                ),
+                AppFillButton(
+                    onPressed: () {
+                      onboardingEvent.setOnboardingComplete();
+                      context.goNamed(RouteName.login);
+                    },
+                    text: Strings.startMessaging),
                 const SizedBox(
                   height: 20,
                 )

@@ -23,7 +23,7 @@ class Authenticator {
         accessToken: googleSignInAuth.accessToken);
 
     try {
-      FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
       return AuthResult.success;
     } catch (e) {
       log.e(e);

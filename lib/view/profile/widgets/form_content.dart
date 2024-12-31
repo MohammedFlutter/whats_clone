@@ -1,9 +1,9 @@
 import 'package:country_phone_validator/country_phone_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:whats_clone/view/constants/strings.dart';
-import 'package:whats_clone/view/profile/widgets/save_button.dart';
 import 'package:whats_clone/view/profile/widgets/phone_number_input.dart';
 import 'package:whats_clone/view/profile/widgets/profile_picture.dart';
+import 'package:whats_clone/view/widgets/app_fill_button.dart';
 
 class FormContent extends StatelessWidget {
   const FormContent(
@@ -12,15 +12,17 @@ class FormContent extends StatelessWidget {
       required this.bioController,
       required this.phoneController,
       required this.onDialCodeChanged,
-      required this.onCreate,
-      required this.dialCode});
+      required this.onCreateProfile,
+      required this.dialCode,
+      required this.onPickImage});
 
   final TextEditingController nameController;
   final TextEditingController bioController;
   final TextEditingController phoneController;
   final void Function(String code) onDialCodeChanged;
   final String dialCode;
-  final VoidCallback onCreate;
+  final VoidCallback onCreateProfile;
+  final VoidCallback onPickImage;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class FormContent extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Spacer(),
-          SaveButton(onPressed: onCreate),
+          AppFillButton(text: Strings.save, onPressed: onCreateProfile),
           const SizedBox(height: 32),
         ],
       ),
@@ -89,7 +91,9 @@ class FormContent extends StatelessWidget {
       modifyDialCode = dialCode;
     }
     final country = CountryUtils.getCountryByDialCode(modifyDialCode);
-    // country ==null,that's mean Country Utils dont support this validation
+
+    /// country ==null,that's mean [CountryUtils] Package dont
+    /// support this country validation
     if (country == null && (phone.length < 8 || phone.length > 15)) {
       return Strings.invalidPhoneNumber;
     }

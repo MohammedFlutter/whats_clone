@@ -35,7 +35,7 @@ class CountryCodePicker extends StatelessWidget {
 class _CountryCodeButton extends StatelessWidget {
   final package.Country? country;
 
-  const _CountryCodeButton({super.key, required this.country});
+  const _CountryCodeButton({required this.country});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _CountryCodeButton extends StatelessWidget {
 class _CountryFlag extends StatelessWidget {
   final String flagUri;
 
-  const _CountryFlag({super.key, required this.flagUri});
+  const _CountryFlag({required this.flagUri});
 
   @override
   Widget build(BuildContext context) {

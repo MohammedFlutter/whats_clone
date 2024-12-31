@@ -1,5 +1,6 @@
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/main.dart';
+import 'package:whats_clone/view/widgets/loading_wrapper.dart';
 import 'package:whats_clone/view/login/login_page.dart';
 import 'package:whats_clone/view/onboarding/onboarding_page.dart';
 import 'package:go_router/go_router.dart';
@@ -22,12 +23,13 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/${RouteName.login}',
       name: RouteName.login,
-      builder: (context, state) => const LoginPage(),
+      builder: (context, state) => const LoadingWrapper(child: LoginPage()),
     ),
     GoRoute(
       path: '/${RouteName.createProfile}',
       name: RouteName.createProfile,
-      builder: (context, state) => const CreateProfilePage(),
+      builder: (context, state) =>
+      const LoadingWrapper(child: CreateProfilePage()),
     ),
     GoRoute(
       path: '/',
