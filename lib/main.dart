@@ -46,8 +46,7 @@ Future<void> initializeHive() async {
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
 
   Hive.registerAdapter(ProfileAdapter());
-  // Hive.registerAdapter(ChatAdapter());
-
+  Hive.registerAdapter(ChatAdapter());
 }
 
 class MyApp extends StatelessWidget {

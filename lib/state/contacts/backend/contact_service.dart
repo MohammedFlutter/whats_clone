@@ -1,58 +1,62 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:hive/hive.dart';
 import 'package:whats_clone/state/constants/firebase_collection_name.dart';
 import 'package:whats_clone/state/constants/firebase_field_name.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 
-// Future<List<Profile>> searchByPhoneOrName(String query) async {}
 class ContactServices {
+  ContactServices({required Box<Profile> profileBox})
+      : _profileBox = profileBox;
+
+  final Box<Profile> _profileBox;
+
+  static List<Contact>? _cachedContacts;
+  static List<String>? _cachedPhones;
+
+  static Future<List<Contact>> get cachedContacts async {
+    _cachedContacts ??= await FlutterContacts.getContacts(
+      withThumbnail: false,
+      withPhoto: false,
+      withGroups: false,
+      withAccounts: false,
+    );
+    return _cachedContacts!;
+  }
+
+  static Future<List<String>> get cachedPhones async {
+    final contacts = await cachedContacts;
+
+    _cachedPhones ??= contacts
+        .expand((contact) => contact.phones)
+        .where((phone) => phone.label == PhoneLabel.mobile)
+        .map((phone) => phone.number)
+        .toSet()
+        .toList();
+    return _cachedPhones!;
+  }
+
   Future<List<AppContact>> get appContacts async {
-    final phoneNumbers = await _getPhonesFromContacts();
+    final contacts = await cachedContacts;
+    final phoneNumbers = await cachedPhones;
 
-    final profiles = await _fetchProfilesByPhoneNumbers(phoneNumbers);
-
-    final contacts = await _getAllContacts();
+    List<Profile> profiles;
+    try {
+      // Try to fetch from Firebase
+      profiles = await _fetchProfilesByPhoneNumbers(phoneNumbers);
+      // Update cache on successful fetch
+      await _updateProfileCache(profiles);
+    } catch (e) {
+      // Use cached profiles on error
+      profiles = _getCachedProfiles(phoneNumbers);
+    }
 
     return _mapContactsToAppContacts(contacts, profiles);
   }
 
-  Future<List<AppContact>> searchContacts({String? name, String? phone}) async {
-    final contacts = await _getAllContacts();
-
-    final filteredContacts = contacts.where((contact) {
-      final matchesName = name != null &&
-          contact.displayName.toLowerCase().contains(name.toLowerCase());
-      final matchesPhone =
-          phone != null && contact.phones.any((p) => p.number.contains(phone));
-      return (name != null && matchesName) || (phone != null && matchesPhone);
-    }).toList();
-
-    final phoneNumbers = filteredContacts
-        .expand((contact) => contact.phones.map((phone) => phone.number))
-        .toSet();
-
-    final profiles = await _fetchProfilesByPhoneNumbers(phoneNumbers);
-
-    return _mapContactsToAppContacts(filteredContacts, profiles);
-  }
-
-  Future<Set<String>> _getPhonesFromContacts() async {
-    final contacts = await FlutterContacts.getContacts(
-      withThumbnail: false,
-      withPhoto: false,
-      deduplicateProperties: false,
-    );
-
-    return contacts
-        .expand((contact) => contact.phones)
-        .where((phone) => phone.label == PhoneLabel.mobile)
-        .map((phone) => phone.number)
-        .toSet();
-  }
-
   Future<List<Profile>> _fetchProfilesByPhoneNumbers(
-      Set<String> phoneNumbers) async {
+      List<String> phoneNumbers) async {
     if (phoneNumbers.isEmpty) return [];
 
     final querySnapshot = await FirebaseFirestore.instance
@@ -65,12 +69,20 @@ class ContactServices {
         .toList();
   }
 
-  Future<List<Contact>> _getAllContacts() async {
-    return FlutterContacts.getContacts(
-      withThumbnail: false,
-      withPhoto: false,
-      deduplicateProperties: false,
-    );
+  // Cache management methods
+  Future<void> _updateProfileCache(List<Profile> profiles) async {
+    await _profileBox.clear(); // Clear old cache
+    for (final profile in profiles) {
+      await _profileBox.put(profile.phoneNumber, profile);
+    }
+  }
+
+  List<Profile> _getCachedProfiles(List<String> phoneNumbers) {
+    return phoneNumbers
+        .map((phone) => _profileBox.get(phone))
+        .where((profile) => profile != null)
+        .cast<Profile>()
+        .toList();
   }
 
   List<AppContact> _mapContactsToAppContacts(

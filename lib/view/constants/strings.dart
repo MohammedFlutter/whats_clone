@@ -34,4 +34,8 @@ class Strings {
   static const profilePhoto = 'Profile photo';
   static const camera = 'Camera';
   static const gallery = 'Gallery';
+
+  static const contacts = 'Contacts';
+  static const chats = 'Chats';
+  static const more = 'More';
 }
