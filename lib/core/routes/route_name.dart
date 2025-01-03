@@ -8,7 +8,6 @@ class RouteName{
   static const onboarding='onboarding';
   static const splash='splash';
   static const login='login';
-  static const home = 'home';
   static const createProfile = 'create-profile';
   static const chats = 'chats';
   static const contacts = 'contacts';

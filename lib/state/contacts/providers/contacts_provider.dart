@@ -15,14 +15,14 @@ final allContactsProvider =
   return ContactNotifier(contactServices);
 });
 
-final searchContactsProvider =
-    FutureProvider.family<List<AppContact>, String?>((ref, nameOrPhone) {
+final searchContactsProvider = FutureProvider.autoDispose
+    .family<List<AppContact>, String?>((ref, nameOrPhone) {
   final contactsState = ref.watch(allContactsProvider);
   if (!contactsState.hasValue) return [];
 
   final contacts = contactsState.value!;
   if (contacts.isEmpty) return [];
-  if (nameOrPhone == null) return contacts;
+  if (nameOrPhone == null || nameOrPhone.isEmpty) return contacts;
 
   final filteredContacts = contacts.where((contact) {
     final matchesName =

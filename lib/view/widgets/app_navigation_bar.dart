@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/theme/app_colors.dart';
 import 'package:whats_clone/view/constants/icons_assets.dart';
 import 'package:whats_clone/view/constants/strings.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Destination {
   const Destination({
@@ -54,21 +54,25 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         isLight ? AppColors.textPrimary : AppColors.textPrimaryDark;
     return NavigationBar(
       destinations: widget.navigationDestinations
-          .map((destination) => NavigationDestination(
-                label: destination.label,
-                icon: SvgPicture.asset(
-                  destination.iconPath,
-                  height: 32,
-                  width: 32,
-                  colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                ),
-                selectedIcon: Icon(
-                  Icons.fiber_manual_record_rounded,
-                  size: 8,
-                  color: iconColor,
-                ),
-              ))
+          .map(
+            (destination) => NavigationDestination(
+              label: destination.label,
+              icon: SvgPicture.asset(
+                destination.iconPath,
+                height: 32,
+                width: 32,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              ),
+              // selectedIcon: SvgPicture.asset(
+              //   destination.iconPath,
+              //   height: 32,
+              //   width: 32,
+              //   colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              // ),
+            ),
+          )
           .toList(),
+
       selectedIndex: _selectedIndex,
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       onDestinationSelected: _onDestinationSelected,

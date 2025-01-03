@@ -39,7 +39,7 @@ class SplashNotifier extends Notifier<AsyncValue<void>> {
         return RouteName.createProfile;
       }
 
-      return RouteName.home;
+      return RouteName.chats;
     } catch (e, st) {
       log.e(
         'Error initializing app: $e',

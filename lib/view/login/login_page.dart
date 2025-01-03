@@ -51,7 +51,7 @@ class LoginPage extends ConsumerWidget {
     final profileStatus = ref.read(profileNotifierProvider).status;
     final routeName = profileStatus == ProfileStatus.noProfile
         ? RouteName.createProfile
-        : RouteName.home;
+        : RouteName.chats;
 
     context.goNamed(routeName);
   }

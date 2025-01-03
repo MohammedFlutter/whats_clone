@@ -17,11 +17,13 @@ class ContactServices {
 
   static Future<List<Contact>> get cachedContacts async {
     _cachedContacts ??= await FlutterContacts.getContacts(
-      withThumbnail: false,
-      withPhoto: false,
-      withGroups: false,
-      withAccounts: false,
+      deduplicateProperties: true,
+      withProperties: true,
     );
+    _cachedContacts?.removeWhere(
+      (contact) => contact.phones.isEmpty,
+    );
+
     return _cachedContacts!;
   }
 
@@ -31,7 +33,7 @@ class ContactServices {
     _cachedPhones ??= contacts
         .expand((contact) => contact.phones)
         .where((phone) => phone.label == PhoneLabel.mobile)
-        .map((phone) => phone.number)
+        .map((phone) => normalizePhoneNumber(phone.number))
         .toSet()
         .toList();
     return _cachedPhones!;
@@ -92,7 +94,9 @@ class ContactServices {
     };
 
     return contacts.map((contact) {
-      final phones = contact.phones.map((phone) => phone.number).toList();
+      final phones = contact.phones
+          .map((phone) => normalizePhoneNumber(phone.number))
+          .toList();
       final matchingProfile =
           phones.map((phone) => profileMap[phone]).firstWhere(
                 (profile) => profile != null,
@@ -105,8 +109,12 @@ class ContactServices {
         phoneNumbers: phones,
         isRegistered: matchingProfile != null,
         userId: matchingProfile?.userId,
+        bio: matchingProfile?.bio,
         avatarUrl: matchingProfile?.avatarUrl,
       );
     }).toList();
   }
+
 }
+   String normalizePhoneNumber(String phoneNumber) =>
+      phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');

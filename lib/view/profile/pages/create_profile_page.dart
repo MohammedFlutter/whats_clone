@@ -39,9 +39,9 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
   void _listenToProfileChanges() {
     ref.listen(
       profileNotifierProvider,
-      (_, state) {
+          (_, state) {
         if (state.status == ProfileStatus.created) {
-          context.goNamed(RouteName.home);
+          context.goNamed(RouteName.contacts);
         }
         if (state.status == ProfileStatus.error) {
           AppSnakeBar.showErrorSnakeBar(context, state.errorMessage!);
@@ -50,7 +50,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
     );
     ref.listen(
       imagePickerProvider,
-      (_, state) {
+          (_, state) {
         if (state.status == UploadStatus.error) {
           AppSnakeBar.showErrorSnakeBar(context, state.errorMessage!);
         }
@@ -78,26 +78,27 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
 
   Widget _buildBody(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: constraints.maxHeight),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Form(
-              key: _formKey,
-              child: FormContent(
-                nameController: _nameController,
-                bioController: _bioController,
-                phoneController: _phoneController,
-                onDialCodeChanged: (code) => _dialCode = code,
-                onCreateProfile: _handleSave,
-                dialCode: _dialCode,
-                onPickImage: () {},
+      builder: (context, constraints) =>
+          SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Form(
+                  key: _formKey,
+                  child: FormContent(
+                    nameController: _nameController,
+                    bioController: _bioController,
+                    phoneController: _phoneController,
+                    onDialCodeChanged: (code) => _dialCode = code,
+                    onCreateProfile: _handleSave,
+                    dialCode: _dialCode,
+                    onPickImage: () {},
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
     );
   }
 
@@ -105,12 +106,14 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
     if (!_formKey.currentState!.validate()) return;
 
     final avatarUrl =
-        await ref.read(imagePickerProvider.notifier).uploadImage();
+    await ref.read(imagePickerProvider.notifier).uploadImage();
 
     final profileState = ref.read(imagePickerProvider);
     // if false, the image is  uploaded successfully or not selected
     if (!(profileState.file == null ||
-        ref.read(imagePickerProvider).status == UploadStatus.success)) return;
+        ref
+            .read(imagePickerProvider)
+            .status == UploadStatus.success)) return;
     final user = ref.read(authProvider);
     final profile = Profile(
       userId: user.userId!,
@@ -123,7 +126,6 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
     );
 
     await ref.read(profileNotifierProvider.notifier).createProfile(profile);
-    print(ref.read(profileNotifierProvider).status);
   }
 
   @override

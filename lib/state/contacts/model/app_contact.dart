@@ -13,7 +13,9 @@ class AppContact with _$AppContact {
 
     // App-specific fields
     String? userId,
+    String? bio,
     @Default(false) bool isRegistered,
+
     // DateTime? lastInteracted,
   }) = _AppContact;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/view/contacts/contacts_page.dart';
 import 'package:whats_clone/view/widgets/loading_wrapper.dart';
 import 'package:whats_clone/view/login/login_page.dart';
 import 'package:whats_clone/view/onboarding/onboarding_page.dart';
@@ -42,7 +43,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/${RouteName.contacts}',
               name: RouteName.contacts,
-              builder: (context, state) => const Text('Contacts'),
+              builder: (context, state) => const ContactPage(),
             )
           ],
         ),
