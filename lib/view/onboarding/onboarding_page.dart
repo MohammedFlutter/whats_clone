@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
-import 'package:whats_clone/view/constants/assets.dart';
+import 'package:whats_clone/view/constants/images.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
 
@@ -27,7 +27,7 @@ class OnboardingPage extends ConsumerWidget {
                   height: 45,
                 ),
                 Image.asset(
-                  Assets.onboarding,
+                  Images.onboarding,
                   height: 200,
                   fit: BoxFit.contain,
                 ),

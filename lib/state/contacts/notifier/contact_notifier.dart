@@ -18,15 +18,8 @@ class ContactNotifier extends StateNotifier<AsyncValue<List<AppContact>>> {
     }
   }
 
-  Future<void> searchContacts({String? name, String? phone}) async {
-    try {
-      state = const AsyncValue.loading();
-      final contacts =
-          await _contactServices.searchContacts(name: name, phone: phone);
-      state = AsyncValue.data(contacts);
-    } catch (error, stackTrace) {
-      log.e(error);
-      state = AsyncValue.error(error, stackTrace);
-    }
+  Future<void> refreshContacts() async {
+    state = const AsyncValue.loading();
+    await loadContacts();
   }
 }

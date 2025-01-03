@@ -12,8 +12,10 @@ class AppContact with _$AppContact {
     String? avatarUrl,
 
     // App-specific fields
-    String? userId, // Firebase user ID if registered in app
+    String? userId,
+    String? bio,
     @Default(false) bool isRegistered,
+
     // DateTime? lastInteracted,
   }) = _AppContact;
 

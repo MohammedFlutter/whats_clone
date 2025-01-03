@@ -34,4 +34,14 @@ class Strings {
   static const profilePhoto = 'Profile photo';
   static const camera = 'Camera';
   static const gallery = 'Gallery';
+
+  static const contacts = 'Contacts';
+  static const chats = 'Chats';
+  static const more = 'More';
+
+  //contacts
+  static const contactOnApp = 'Contacts On $appTitle';
+  static const inviteToApp = 'Invite to ${Strings.appTitle}';
+
+
 }

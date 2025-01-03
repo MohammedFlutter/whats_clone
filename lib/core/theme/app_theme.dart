@@ -16,6 +16,7 @@ class AppTheme {
       ),
       colorScheme: const ColorScheme.light(
         primary: AppColors.primaryLight,
+        secondary: AppColors.secondaryLight,
         surface: AppColors.surface,
         surfaceContainerLow: AppColors.surfaceContainer,
         surfaceContainerHighest: AppColors.offWhite,
@@ -32,7 +33,7 @@ class AppTheme {
         bodyMedium:
             AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
       ),
-      // dividerColor: AppColors.divider,
+      dividerColor: AppColors.divider,
 
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -83,10 +84,12 @@ class AppTheme {
       ),
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primaryDark,
+        secondary: AppColors.secondaryDark,
         surface: AppColors.surfaceDark,
         surfaceContainerLow: AppColors.surfaceContainerDark,
         surfaceContainerHighest: AppColors.surfaceContainerDark,
         surfaceContainerHigh: AppColors.surfaceContainerDark,
+
         error: AppColors.error,
       ),
       textTheme: TextTheme(
@@ -99,7 +102,7 @@ class AppTheme {
         bodyMedium:
             AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimaryDark),
       ),
-      // dividerColor: AppColors.divider,
+      dividerColor: AppColors.dividerDark,
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         filled: true,

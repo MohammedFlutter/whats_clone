@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,19 +35,19 @@ Future<void> main() async {
     final license = await rootBundle.loadString('assets/fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['assets/fonts'], license);
   });
+   await FlutterContacts.requestPermission(readonly: true);
 
   runApp(const ProviderScope(child: MyApp()));
 }
 
 Future<void> initializeHive() async {
+  Hive.registerAdapter(ProfileAdapter());
+  Hive.registerAdapter(ChatAdapter());
   await Hive.initFlutter();
   await Hive.openBox<bool>(HiveBoxName.onboarding);
   await Hive.openBox<Chat>(HiveBoxName.chats);
   await Hive.openBox<Profile>(HiveBoxName.profiles);
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
-
-  Hive.registerAdapter(ProfileAdapter());
-  // Hive.registerAdapter(ChatAdapter());
 
 }
 
@@ -62,28 +63,8 @@ class MyApp extends StatelessWidget {
               GoogleFonts.mulishTextTheme(AppTheme.lightTheme.textTheme)),
       darkTheme: AppTheme.darkTheme.copyWith(
           textTheme: GoogleFonts.mulishTextTheme(AppTheme.darkTheme.textTheme)),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       routerConfig: appRouter,
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-  });
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('home page'),
-      ),
     );
   }
 }
