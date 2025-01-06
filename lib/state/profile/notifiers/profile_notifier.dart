@@ -1,44 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
-import 'package:whats_clone/state/profile/backend/profile_storage.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
+import 'package:whats_clone/state/profile/services/profile_repository.dart';
 
 class ProfileNotifier extends StateNotifier<ProfileState> {
-  final ProfileStorage profileStorage;
-  final Box<Profile> profileBox;
-  final Box<bool> profileCompletionBox;
+  final ProfileRepository profileService;
 
   ProfileNotifier({
-    required this.profileStorage,
-    required this.profileBox,
-    required this.profileCompletionBox,
+    required this.profileService,
   }) : super(const ProfileState());
 
   /// Load a profile by userId.
   Future<void> loadProfile({required String userId}) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      Profile? localProfile = profileBox.get(userId);
+      final profile = await profileService.getProfile(userId: userId);
 
-      if (localProfile == null) {
-        // If no local profile, fetch from backend
-        final profile = await profileStorage.getProfile(userId: userId);
-
-        if (profile == null) {
-          state = state.copyWith(
-            status: ProfileStatus.noProfile,
-          );
-          return;
-        }
-
-        // Save to local storage
-        await profileBox.put(userId, profile);
-        localProfile = profile;
+      if (profile == null) {
+        state = state.copyWith(
+          status: ProfileStatus.noProfile,
+        );
+        return;
       }
-
       state = state.copyWith(
-        profile: localProfile,
+        profile: profile,
         status: ProfileStatus.loaded,
       );
     } catch (e) {
@@ -53,14 +38,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> createProfile(Profile profile) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      // Create profile in backend
-      await profileStorage.createProfile(profile: profile);
-
-      // Save to local Hive storage
-      await profileBox.put(profile.userId, profile);
-
-      // Mark profile as incomplete by default
-      await profileCompletionBox.put(profile.userId, true);
+      await profileService.createProfile(profile: profile);
 
       state = state.copyWith(
         profile: profile,
@@ -78,11 +56,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> updateProfile(Profile profile) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      // Update profile in backend
-      await profileStorage.updateProfile(profile: profile);
-
-      // Update local Hive storage
-      await profileBox.put(profile.userId, profile);
+      await profileService.updateProfile(profile: profile);
 
       state = state.copyWith(
         profile: profile,
@@ -95,5 +69,4 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       );
     }
   }
-
 }

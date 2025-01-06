@@ -34,12 +34,18 @@ class SplashNotifier extends Notifier<AsyncValue<void>> {
           .read(profileNotifierProvider.notifier)
           .loadProfile(userId: userId);
 
-      final profileStatus = ref.read(profileNotifierProvider).status;
+      final profileState = ref.read(profileNotifierProvider);
+      final profileStatus = profileState.status;
+      if (profileStatus == ProfileStatus.loaded) {
+        return RouteName.chats;
+      }
       if (profileStatus == ProfileStatus.noProfile) {
         return RouteName.createProfile;
       }
-
-      return RouteName.chats;
+      if (profileStatus == ProfileStatus.error) {
+        throw Exception(profileState.errorMessage);
+      }
+      throw Exception('Unknown profile status: $profileStatus');
     } catch (e, st) {
       log.e(
         'Error initializing app: $e',

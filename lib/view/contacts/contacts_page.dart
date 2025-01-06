@@ -23,7 +23,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
 
   void _loadContacts() {
     Future.microtask(() {
-      ref.read(allContactsProvider.notifier).loadContacts();
+      ref.read(allContactsProvider.notifier);
     });
   }
 
@@ -64,7 +64,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
 
   Widget _buildContactListView() {
     return RefreshIndicator(
-      onRefresh: () => ref.refresh(allContactsProvider.notifier).loadContacts(),
+      onRefresh: () => ref.refresh(allContactsProvider.notifier).refreshContacts(),
       child: Consumer(
         builder: (context, ref, _) {
           final searchQuery = _searchController.text;

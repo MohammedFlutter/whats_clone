@@ -1,4 +1,4 @@
-import 'package:country_phone_validator/country_phone_validator.dart';
+import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:flutter/material.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/profile/widgets/phone_number_input.dart';
@@ -82,26 +82,11 @@ class FormContent extends StatelessWidget {
     if (phone == null || phone.isEmpty) {
       return Strings.phoneNumberIsRequired;
     }
-    String modifyDialCode;
+    final phoneNumberUtil = PhoneNumberUtil.instance;
 
-    // convert +#### to +#-###
-    if (dialCode.length == 5) {
-      modifyDialCode = '${dialCode.substring(0, 2)}-${dialCode.substring(2)}';
-    } else {
-      modifyDialCode = dialCode;
-    }
-    final country = CountryUtils.getCountryByDialCode(modifyDialCode);
-
-    /// country ==null,that's mean [CountryUtils] Package dont
-    /// support this country validation
-    if (country == null && (phone.length < 8 || phone.length > 15)) {
+    if (!phoneNumberUtil.isViablePhoneNumber(phone)) {
       return Strings.invalidPhoneNumber;
     }
-    if (country != null &&
-        !CountryUtils.validatePhoneNumber(phone, modifyDialCode)) {
-      return Strings.invalidPhoneNumber;
-    }
-
     return null;
   }
 }

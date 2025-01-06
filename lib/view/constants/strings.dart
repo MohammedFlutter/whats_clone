@@ -34,6 +34,7 @@ class Strings {
   static const profilePhoto = 'Profile photo';
   static const camera = 'Camera';
   static const gallery = 'Gallery';
+  static const errorLoadingProfile= 'Error loading profile';
 
   static const contacts = 'Contacts';
   static const chats = 'Chats';
@@ -42,6 +43,7 @@ class Strings {
   //contacts
   static const contactOnApp = 'Contacts On $appTitle';
   static const inviteToApp = 'Invite to ${Strings.appTitle}';
+
 
 
 }
