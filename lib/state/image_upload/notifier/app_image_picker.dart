@@ -52,7 +52,6 @@ class ImagePickerNotifier extends StateNotifier<UploadState> {
       log.e('Error uploading image: $e');
       state = state.copyWith(
           status: UploadStatus.error, errorMessage: e.toString());
-
       return null;
     }
   }

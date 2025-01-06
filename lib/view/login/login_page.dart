@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
@@ -23,7 +24,8 @@ class LoginPage extends ConsumerWidget {
         if (authState.authResult == AuthResult.success) {
           _handleSuccessfulLogin(context, ref, authState);
         } else if (authState.authResult == AuthResult.failed) {
-          AppSnakeBar.showErrorSnakeBar(context, Strings.authenticationFailed);
+          AppSnakeBar.showErrorSnakeBar(
+              context: context, message: Strings.authenticationFailed);
         }
       },
     );
@@ -49,9 +51,22 @@ class LoginPage extends ConsumerWidget {
     if (!context.mounted) return;
 
     final profileStatus = ref.read(profileNotifierProvider).status;
-    final routeName = profileStatus == ProfileStatus.noProfile
-        ? RouteName.createProfile
-        : RouteName.chats;
+
+    final String routeName;
+    if (profileStatus == ProfileStatus.loaded) {
+      routeName = RouteName.chats;
+    } else if (profileStatus == ProfileStatus.noProfile) {
+      routeName = RouteName.createProfile;
+    } else if (profileStatus == ProfileStatus.error) {
+      AppSnakeBar.showErrorSnakeBar(
+          context: context,
+          message: Strings.errorLoadingProfile,
+          onRetry: () => _handleSuccessfulLogin(context, ref, authState));
+      return;
+    } else {
+      log.e('Unknown profile status: $profileStatus');
+      return;
+    }
 
     context.goNamed(routeName);
   }

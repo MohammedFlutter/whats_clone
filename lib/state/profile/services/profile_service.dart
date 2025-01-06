@@ -1,17 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whats_clone/state/constants/firebase_collection_name.dart';
 import 'package:whats_clone/state/constants/firebase_field_name.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ProfileStorage {
+abstract class ProfileService {
+  Future<Profile?> getProfile({required String userId});
+
+  Future<void> createProfile({required Profile profile});
+
+  Future<void> updateProfile({required Profile profile});
+
+  Future<List<Profile>> getProfiles(List<String> phoneNumbers);
+}
+
+class ProfileServiceFirebase implements ProfileService {
   final _profilesCollection =
       FirebaseFirestore.instance.collection(FirebaseCollectionName.profiles);
 
-  /// Retrieves a profile by userId.
-  Future<Profile?> getProfile({String? userId}) async {
-    if (userId == null) {
-      return null;
-    }
+  @override
+  Future<Profile?> getProfile({required String userId}) async {
     final querySnapshot = await _profilesCollection
         .where(FirebaseFieldName.userId, isEqualTo: userId)
         .limit(1)
@@ -23,7 +30,21 @@ class ProfileStorage {
     return Profile.fromJson(querySnapshot.docs.first.data());
   }
 
-  /// Adds a new profile if it doesn't exist and the phone number is unique.
+  /// need for match contacts with profiles
+  @override
+  Future<List<Profile>> getProfiles(List<String> phoneNumbers) async {
+    if (phoneNumbers.isEmpty) return [];
+
+    final querySnapshot = await _profilesCollection
+        .where(FirebaseFieldName.phoneNumber, whereIn: phoneNumbers)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => Profile.fromJson(doc.data()))
+        .toList();
+  }
+
+  @override
   Future<void> createProfile({required Profile profile}) async {
     final existingProfile = await getProfile(userId: profile.userId);
     if (existingProfile != null) {
@@ -38,7 +59,7 @@ class ProfileStorage {
     await _profilesCollection.add(profile.toJson());
   }
 
-  /// Updates an existing profile if it exists.
+  @override
   Future<void> updateProfile({required Profile profile}) async {
     final querySnapshot = await _profilesCollection
         .where(FirebaseFieldName.userId, isEqualTo: profile.userId)
@@ -51,19 +72,13 @@ class ProfileStorage {
 
     final docRef = querySnapshot.docs.first.reference;
 
-    // Ensure phone number uniqueness if it's updated
-    final existingProfile = Profile.fromJson(querySnapshot.docs.first.data());
-    if (existingProfile.phoneNumber != profile.phoneNumber) {
-      final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber!);
-      if (!isPhoneUnique) {
-        throw Exception("Phone number already exists.");
-      }
+    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber!);
+    if (!isPhoneUnique) {
+      throw Exception("Phone number already exists.");
     }
-
     await docRef.update(profile.toJson());
   }
 
-  /// Checks if the phone number is unique across profiles.
   Future<bool> _isPhoneUnique({required String phone}) async {
     final querySnapshot = await _profilesCollection
         .where(FirebaseFieldName.phoneNumber, isEqualTo: phone)

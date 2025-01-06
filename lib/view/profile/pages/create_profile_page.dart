@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/image_upload/model/upload_state.dart';
+import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
-import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/profile/widgets/form_content.dart';
 import 'package:whats_clone/view/widgets/app_snake_bar.dart';
@@ -39,20 +39,22 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
   void _listenToProfileChanges() {
     ref.listen(
       profileNotifierProvider,
-          (_, state) {
+      (_, state) {
         if (state.status == ProfileStatus.created) {
           context.goNamed(RouteName.contacts);
         }
         if (state.status == ProfileStatus.error) {
-          AppSnakeBar.showErrorSnakeBar(context, state.errorMessage!);
+          AppSnakeBar.showErrorSnakeBar(
+              context: context, message: state.errorMessage!);
         }
       },
     );
     ref.listen(
       imagePickerProvider,
-          (_, state) {
+      (_, state) {
         if (state.status == UploadStatus.error) {
-          AppSnakeBar.showErrorSnakeBar(context, state.errorMessage!);
+          AppSnakeBar.showErrorSnakeBar(
+              context: context, message: state.errorMessage!);
         }
       },
     );
@@ -78,27 +80,26 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
 
   Widget _buildBody(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) =>
-          SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Form(
-                  key: _formKey,
-                  child: FormContent(
-                    nameController: _nameController,
-                    bioController: _bioController,
-                    phoneController: _phoneController,
-                    onDialCodeChanged: (code) => _dialCode = code,
-                    onCreateProfile: _handleSave,
-                    dialCode: _dialCode,
-                    onPickImage: () {},
-                  ),
-                ),
+      builder: (context, constraints) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Form(
+              key: _formKey,
+              child: FormContent(
+                nameController: _nameController,
+                bioController: _bioController,
+                phoneController: _phoneController,
+                onDialCodeChanged: (code) => _dialCode = code,
+                onCreateProfile: _handleSave,
+                dialCode: _dialCode,
+                onPickImage: () {},
               ),
             ),
           ),
+        ),
+      ),
     );
   }
 
@@ -106,21 +107,19 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
     if (!_formKey.currentState!.validate()) return;
 
     final avatarUrl =
-    await ref.read(imagePickerProvider.notifier).uploadImage();
+        await ref.read(imagePickerProvider.notifier).uploadImage();
 
     final profileState = ref.read(imagePickerProvider);
     // if false, the image is  uploaded successfully or not selected
     if (!(profileState.file == null ||
-        ref
-            .read(imagePickerProvider)
-            .status == UploadStatus.success)) return;
+        ref.read(imagePickerProvider).status == UploadStatus.success)) return;
     final user = ref.read(authProvider);
     final profile = Profile(
       userId: user.userId!,
       avatarUrl: avatarUrl,
       name: _nameController.text,
       email: user.email,
-      phoneNumber: '$_dialCode${_phoneController.text}',
+      phoneNumber: '${_dialCode.substring(1)}${_phoneController.text}',
       bio: _bioController.text,
       createdAt: DateTime.now(),
     );
