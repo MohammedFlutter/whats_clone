@@ -1,66 +1,35 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whats_clone/state/chat/models/chat.dart';
-import 'package:whats_clone/state/chat/repository/chat_repository.dart';
 import 'package:whats_clone/core/utils/logger.dart';
+import 'package:whats_clone/state/auth/provider/auth.dart';
+import 'package:whats_clone/state/chat/models/chat.dart';
+import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 
-class ChatNotifier extends StateNotifier<AsyncValue<List<Chat>>> {
-  final ChatRepository _chatRepository;
-  final String _userId;
-  late final StreamSubscription<List<Chat>> _chatSubscription;
+class ChatNotifier extends StreamNotifier<List<Chat>> {
+  @override
+  Stream<List<Chat>> build() {
+    final userId = ref.read(authProvider).userId!;
 
-  ChatNotifier(this._chatRepository, this._userId)
-      : super(const AsyncLoading()) {
-    _fetchChats();
+    return ref.read(chatRepositoryProvider).getChats(userId: userId);
   }
 
-  void _fetchChats() {
-    _chatSubscription = _chatRepository.getChats(userId: _userId).listen(
-      (chats) {
-        state = AsyncData(chats);
-      },
-      onError: (error, stackTrace) {
-        log.e(error);
-        state = AsyncError(error, stackTrace);
-      },
-    );
-  }
-
-  Future<void> createChat({
-    required List<String> memberIds,
-    String? lastMessage,
-    DateTime? lastMessageTimestamp,
-  }) async {
+  Future<void> createChat({required String antherUserId}) async {
     try {
-      final newChat = await _chatRepository.createChat(
-        memberIds: memberIds,
-        lastMessage: lastMessage,
-        lastMessageTimestamp: lastMessageTimestamp,
-      );
-      state = AsyncData([...?state.asData?.value, newChat]);
+      final userId = ref.read(authProvider).userId!;
+      await ref
+          .read(chatRepositoryProvider)
+          .createChat(userId1: userId, userId2: antherUserId);
     } catch (error, stackTrace) {
-      log.e(error.toString());
-
-      state = AsyncError(error, stackTrace);
+      log.e(error, stackTrace: stackTrace);
     }
   }
 
   Future<void> deleteChat(String chatId) async {
     try {
-      await _chatRepository.deleteChat(chatId);
-      state = AsyncData(
-          state.asData?.value.where((chat) => chat.chatId != chatId).toList() ??
-              []);
+      await ref.read(chatRepositoryProvider).deleteChat(chatId);
     } catch (error, stackTrace) {
-      log.e(error);
-      state = AsyncError(error, stackTrace);
+      log.e(error, stackTrace: stackTrace);
     }
-  }
-
-  @override
-  void dispose() {
-    _chatSubscription.cancel();
-    super.dispose();
   }
 }

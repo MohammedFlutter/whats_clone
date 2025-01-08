@@ -24,7 +24,7 @@ class ContactRepository {
 
     List<Profile> profiles;
     try {
-      profiles = await _profileService.getProfiles(phoneNumbers);
+      profiles = await _profileService.getProfilesByPhoneNumbers(phoneNumbers);
       await _profileCache.updateCacheProfiles(profiles);
     } catch (e) {
       profiles = _profileCache.getCachedProfiles(phoneNumbers);
