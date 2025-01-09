@@ -4,13 +4,15 @@ import 'package:whats_clone/state/constants/firebase_field_name.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 
 abstract class ProfileService {
-  Future<Profile?> getProfile({required String userId});
-
   Future<void> createProfile({required Profile profile});
 
   Future<void> updateProfile({required Profile profile});
 
-  Future<List<Profile>> getProfiles(List<String> phoneNumbers);
+  Future<Profile?> getProfile({required String userId});
+
+  Future<List<Profile>> getProfilesByPhoneNumbers(List<String> phoneNumbers);
+
+  Future<List<Profile>> getProfileByUsersId({required List<String> usersId});
 }
 
 class ProfileServiceFirebase implements ProfileService {
@@ -30,9 +32,24 @@ class ProfileServiceFirebase implements ProfileService {
     return Profile.fromJson(querySnapshot.docs.first.data());
   }
 
+  @override
+  Future<List<Profile>> getProfileByUsersId(
+      {required List<String> usersId}) async {
+    if (usersId.isEmpty) return [];
+
+    final querySnapshot = await _profilesCollection
+        .where(FirebaseFieldName.userId, whereIn: usersId)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => Profile.fromJson(doc.data()))
+        .toList();
+  }
+
   /// need for match contacts with profiles
   @override
-  Future<List<Profile>> getProfiles(List<String> phoneNumbers) async {
+  Future<List<Profile>> getProfilesByPhoneNumbers(
+      List<String> phoneNumbers) async {
     if (phoneNumbers.isEmpty) return [];
 
     final querySnapshot = await _profilesCollection
@@ -51,7 +68,7 @@ class ProfileServiceFirebase implements ProfileService {
       throw Exception("Profile already exists.");
     }
 
-    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber!);
+    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber);
     if (!isPhoneUnique) {
       throw Exception("Phone number already exists.");
     }
@@ -72,7 +89,7 @@ class ProfileServiceFirebase implements ProfileService {
 
     final docRef = querySnapshot.docs.first.reference;
 
-    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber!);
+    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber);
     if (!isPhoneUnique) {
       throw Exception("Phone number already exists.");
     }
