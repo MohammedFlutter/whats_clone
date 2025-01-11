@@ -11,7 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whats_clone/core/routes/app_router.dart';
 import 'package:whats_clone/core/secrets.dart';
 import 'package:whats_clone/core/theme/app_theme.dart';
-import 'package:whats_clone/state/chat/models/chat.dart';
+import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 
@@ -35,20 +35,20 @@ Future<void> main() async {
     final license = await rootBundle.loadString('assets/fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['assets/fonts'], license);
   });
-   await FlutterContacts.requestPermission(readonly: true);
+  await FlutterContacts.requestPermission(readonly: true);
 
   runApp(const ProviderScope(child: MyApp()));
 }
 
 Future<void> initializeHive() async {
   Hive.registerAdapter(ProfileAdapter());
-  Hive.registerAdapter(ChatAdapter());
+  Hive.registerAdapter(ChatProfileAdapter());
   await Hive.initFlutter();
   await Hive.openBox<bool>(HiveBoxName.onboarding);
-  await Hive.openBox<Chat>(HiveBoxName.chats);
+  // await Hive.openBox<Chat>(HiveBoxName.chats);
   await Hive.openBox<Profile>(HiveBoxName.profiles);
+  await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
-
 }
 
 class MyApp extends StatelessWidget {

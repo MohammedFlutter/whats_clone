@@ -42,8 +42,10 @@ class Strings {
 
   //contacts
   static const contactOnApp = 'Contacts On $appTitle';
+  static const searchContacts = 'Search contacts...';
   static const inviteToApp = 'Invite to ${Strings.appTitle}';
-
+  // chats
+  static const searchChat = 'Search chat...';
 
 
 }

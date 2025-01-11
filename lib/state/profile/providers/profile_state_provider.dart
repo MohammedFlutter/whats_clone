@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:whats_clone/state/chat/models/chat_profile.dart';
-import 'package:whats_clone/state/chat/notifier/chat_profile_notifier.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
@@ -41,7 +39,3 @@ final profileNotifierProvider =
     profileService: ref.watch(profileRepositoryProvider),
   ),
 );
-
-final chatProfileNotifierProvider =
-    StreamNotifierProvider<ChatProfileNotifier, List<ChatProfile>>(
-        ChatProfileNotifier.new);

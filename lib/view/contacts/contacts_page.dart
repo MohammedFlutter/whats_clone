@@ -3,7 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/providers/contacts_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
-import 'package:whats_clone/view/contacts/widgets/contact_card.dart';
+import 'package:whats_clone/view/widgets/app_list_tile.dart';
+import 'package:whats_clone/view/widgets/app_search_bar.dart';
+
+final contactSearchQueryProvider = StateProvider<String>((ref) {
+  return '';
+});
 
 class ContactPage extends ConsumerStatefulWidget {
   const ContactPage({super.key});
@@ -13,8 +18,6 @@ class ContactPage extends ConsumerStatefulWidget {
 }
 
 class _ContactPageState extends ConsumerState<ContactPage> {
-  final _searchController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -28,55 +31,38 @@ class _ContactPageState extends ConsumerState<ContactPage> {
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(Strings.contacts)),
       body: Column(
         children: [
-          _buildSearchBar(),
+          AppSearchBar(
+            hintText: Strings.searchContacts,
+            onChanged: (value) =>
+                ref.watch(contactSearchQueryProvider.notifier).state = value,
+          ),
           Expanded(child: _buildContactListView()),
         ],
       ),
     );
   }
 
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: TextFormField(
-        controller: _searchController,
-        decoration: InputDecoration(
-          hintText: 'Search contacts...',
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-        onChanged: (_) => setState(() {}),
-      ),
-    );
-  }
-
   Widget _buildContactListView() {
     return RefreshIndicator(
-      onRefresh: () => ref.refresh(allContactsProvider.notifier).refreshContacts(),
+      onRefresh: () =>
+          ref.refresh(allContactsProvider.notifier).refreshContacts(),
       child: Consumer(
         builder: (context, ref, _) {
-          final searchQuery = _searchController.text;
+          final searchQuery = ref.watch(contactSearchQueryProvider);
           final contactsProvider = searchQuery.isEmpty
               ? allContactsProvider
-              : searchContactsProvider(searchQuery);
+              : searchContactsProvider;
 
           return ref.watch(contactsProvider).when(
-            data: _buildContactList,
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Center(child: Text('Error: $error')),
-          );
+                data: _buildContactList,
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) => Center(child: Text('Error: $error')),
+              );
         },
       ),
     );
@@ -119,15 +105,17 @@ class _ContactPageState extends ConsumerState<ContactPage> {
   }
 
   Widget _buildContactSection(
-      List<AppContact> contacts,
-      void Function(AppContact) onPressed,
-      ) {
+    List<AppContact> contacts,
+    void Function(AppContact) onPressed,
+  ) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         childCount: contacts.length,
-            (context, index) => ContactCard(
-          contact: contacts[index],
+        (context, index) => AppListTile(
           onPressed: () => onPressed(contacts[index]),
+          title: contacts[index].displayName,
+          subtitle: contacts[index].phoneNumbers.join(', '),
+          avatarUrl: contacts[index].avatarUrl,
         ),
       ),
     );

@@ -12,16 +12,4 @@ class ChatProfileNotifier extends StreamNotifier<List<ChatProfile>> {
         .watch(chatProfileRepositoryProvider)
         .getChatProfiles(userId: userId);
   }
-
-  List<ChatProfile> search(String query) {
-    final chatProfiles = state.value;
-    if (chatProfiles == null || chatProfiles.isEmpty) return [];
-    return chatProfiles
-        .where((chatProfile) =>
-                chatProfile.name.toLowerCase().contains(query.toLowerCase()) ||
-                chatProfile.phone.toLowerCase().contains(query.toLowerCase())
-            // nice to add more search criteria
-            )
-        .toList();
-  }
 }
