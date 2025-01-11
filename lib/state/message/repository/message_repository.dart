@@ -52,11 +52,9 @@ class MessageRepository {
       if (data == null) return [];
       return data.entries.map((entry) {
         final messageData = Map<String, dynamic>.from(entry.value);
-        return Message.fromJson({
-          // 'messageId': entry.key,
-          ...messageData,
-        });
-      }).toList();
+        return Message.fromJson(messageData);
+      }).toList()
+        ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
     });
   }
 

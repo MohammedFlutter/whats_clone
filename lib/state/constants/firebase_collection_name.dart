@@ -7,6 +7,7 @@ class FirebaseCollectionName{
 
   static const profiles='profiles';
   static const chats='chats';
+  static const usersChats='usersChats';
   static const messages='messages';
 
 
