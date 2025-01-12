@@ -13,6 +13,8 @@ import 'package:whats_clone/core/secrets.dart';
 import 'package:whats_clone/core/theme/app_theme.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
+import 'package:whats_clone/state/message/models/chat_messages.dart';
+import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 
 import 'firebase_options.dart';
@@ -43,12 +45,16 @@ Future<void> main() async {
 Future<void> initializeHive() async {
   Hive.registerAdapter(ProfileAdapter());
   Hive.registerAdapter(ChatProfileAdapter());
+  Hive.registerAdapter(MessageAdapter());
+  Hive.registerAdapter(ChatMessagesAdapter());
+
   await Hive.initFlutter();
   await Hive.openBox<bool>(HiveBoxName.onboarding);
   // await Hive.openBox<Chat>(HiveBoxName.chats);
   await Hive.openBox<Profile>(HiveBoxName.profiles);
   await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
+  await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
 }
 
 class MyApp extends StatelessWidget {

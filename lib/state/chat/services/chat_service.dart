@@ -7,7 +7,10 @@ abstract class ChatService {
 
   Stream<List<Chat>> getChatsByUserId({required String userId});
 
-  Future<void> updateChat({required Chat chat});
+  Future<void> updateChat(
+      {required String chatId,
+      required String lastMessage,
+      required DateTime lastMessageTimestamp});
 
   Future<void> deleteChat({required String chatId});
 }
@@ -125,8 +128,19 @@ class ChatServiceFirebase implements ChatService {
   }
 
   @override
-  Future<void> updateChat({required Chat chat}) => _chatsCollection
-      .child(FirebaseCollectionName.chats)
-      .child(chat.chatId)
-      .update(chat.toJson());
+  Future<void> updateChat({
+    required String chatId,
+    required String lastMessage,
+    required DateTime lastMessageTimestamp,
+  }) {
+    final update = <String, Object?>{
+      'lastMessage': lastMessage,
+      'lastMessageTimestamp': lastMessageTimestamp.toIso8601String(),
+    };
+
+    return _chatsCollection
+        .child(FirebaseCollectionName.chats)
+        .child(chatId)
+        .update(update);
+  }
 }

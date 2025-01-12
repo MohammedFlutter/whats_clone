@@ -20,9 +20,9 @@ class ChatNotifier extends Notifier<void> {
     }
   }
 
-  Future<void> deleteChat(String chatId) async {
+  Future<void> deleteChat({required String chatId}) async {
     try {
-      await ref.read(chatRepositoryProvider).deleteChat(chatId);
+      await ref.read(chatRepositoryProvider).deleteChat(chatId: chatId);
     } catch (error, stackTrace) {
       log.e(error, stackTrace: stackTrace);
     }

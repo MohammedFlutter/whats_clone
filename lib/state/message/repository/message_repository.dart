@@ -1,77 +1,46 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:whats_clone/state/constants/firebase_collection_name.dart';
+import 'dart:async';
+
+import 'package:whats_clone/state/chat/services/chat_repository.dart';
+import 'package:whats_clone/state/message/models/chat_messages.dart';
 import 'package:whats_clone/state/message/models/message.dart';
+import 'package:whats_clone/state/message/repository/chat_messages_cache.dart';
+import 'package:whats_clone/state/message/repository/message_service.dart';
 
 class MessageRepository {
-  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
+  MessageRepository(
+      {required ChatMessagesCache chatMessagesCache,
+      required MessageService messageService,
+      required ChatRepository chatService})
+      : _chatMessagesCache = chatMessagesCache,
+        _messageService = messageService,
+        _chatRepository = chatService;
+  final ChatMessagesCache _chatMessagesCache;
+  final MessageService _messageService;
+  final ChatRepository _chatRepository;
 
-  MessageRepository();
-
-  /// Sends a message to the Firebase Realtime Database.
-  ///
-  /// [message] - The message object to be sent.
-  Future<void> sendMessage(Message message) async {
+  Stream<ChatMessages> getChatMessages({required String chatId}) async* {
     try {
-      final newMessageRef = _databaseReference
-          .child('${FirebaseCollectionName.chats}/${message.chatId}/'
-              '${FirebaseCollectionName.messages}')
-          .push();
-
-      await newMessageRef.set(message.toJson());
-    } catch (e) {
-      rethrow;
+      await for (final chatMessages
+          in _messageService.getChatMessages(chatId: chatId)) {
+        _chatMessagesCache.setChatMessages(chatMessages);
+        yield chatMessages;
+      }
+    } catch (_) {
+      final cachedMessages = _chatMessagesCache.getMessages(chatId);
+      if (cachedMessages != null) {
+        yield cachedMessages;
+      } else {
+        rethrow;
+      }
     }
   }
 
-  /// Deletes a message from the Firebase Realtime Database.
-  ///
-  /// [chatId] - The ID of the chat.
-  /// [messageId] - The unique ID of the message to delete.
-  Future<void> deleteMessage(String chatId, String messageId) async {
-    try {
-      await _databaseReference
-          .child('${FirebaseCollectionName.chats}/$chatId/'
-              '${FirebaseCollectionName.messages}/$messageId')
-          .remove();
-    } catch (e) {
-      rethrow;
-    }
-  }
+  Future<void> sendMessage({required Message message}) {
+    _chatRepository.updateLastMessage(
+        chatId: message.chatId,
+        lastMessage: message.content,
+        lastMessageTimestamp: message.createdAt);
 
-  /// Listens for messages in a specific chat.
-  ///
-  /// [chatId] - The ID of the chat.
-  /// Returns a stream of messages as a list of [Message] objects.
-  Stream<List<Message>> listenToMessages(String chatId) {
-    return _databaseReference
-        .child('${FirebaseCollectionName.chats}/$chatId/'
-            '${FirebaseCollectionName.messages}')
-        .onValue
-        .map((event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (data == null) return [];
-      return data.entries.map((entry) {
-        final messageData = Map<String, dynamic>.from(entry.value);
-        return Message.fromJson(messageData);
-      }).toList()
-        ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    });
+    return _messageService.sendMessage(message: message);
   }
-
-// /// Sends a message and ensures offline support by writing to the local cache.
-// ///
-// /// [message] - The message object to be sent.
-// Future<void> sendMessageWithOfflineSupport(Message message) async {
-//   try {
-//     await _databaseReference
-//         .child('${FirebaseCollectionName.chats}/${message.chatId}/'
-//             '${FirebaseCollectionName.messages}/${message.messageId}')
-//         .set(message.toJson())
-//         .then((_) {
-//       _databaseReference.keepSynced(true);
-//     });
-//   } catch (e) {
-//     rethrow;
-//   }
-// }
 }

@@ -12,7 +12,9 @@ import 'package:whats_clone/state/profile/providers/profile_state_provider.dart'
 import 'package:whats_clone/view/chats/chats_page.dart';
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
-  return ChatRepository(chatService: ref.watch(chatServiceProvider));
+  return ChatRepository(
+      chatService: ref.watch(chatServiceProvider),
+      chatProfileCache: ref.watch(chatProfileCacheProvider));
 });
 final chatProfileRepositoryProvider = Provider<ChatProfileRepository>((ref) {
   return ChatProfileRepository(
