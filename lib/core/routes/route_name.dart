@@ -10,6 +10,7 @@ class RouteName{
   static const login='login';
   static const createProfile = 'create-profile';
   static const chats = 'chats';
+  static const chatRoom = 'chat-room';
   static const contacts = 'contacts';
   static const more = 'more';
 }

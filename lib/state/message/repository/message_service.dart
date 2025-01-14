@@ -44,13 +44,13 @@ class MessageServiceFirebase implements MessageService {
         .onValue
         .map((event) {
       final data = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (data == null) return ChatMessages(chatId: chatId, message: []);
+      if (data == null) return ChatMessages(chatId: chatId, messages: []);
       final messages = data.entries.map((entry) {
         final messageData = Map<String, dynamic>.from(entry.value);
         return Message.fromJson(messageData);
       }).toList()
         ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
-      return ChatMessages(chatId: chatId, message: messages);
+      return ChatMessages(chatId: chatId, messages: messages);
     });
   }
 //

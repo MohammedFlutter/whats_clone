@@ -8,5 +8,6 @@ class IconsAssets {
   static const String contacts = 'assets/icons/contacts.svg';
   static const String chats = 'assets/icons/chats.svg';
   static const String more = 'assets/icons/more.svg';
+  static const String send = 'assets/icons/send.svg';
 
 }

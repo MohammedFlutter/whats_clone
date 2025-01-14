@@ -3,7 +3,7 @@ import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/constants/firebase_collection_name.dart';
 
 abstract class ChatService {
-  Future<void> createChat({required String userId1, required String userId2});
+  Future<Chat> createChat({required String userId1, required String userId2});
 
   Stream<List<Chat>> getChatsByUserId({required String userId});
 
@@ -19,19 +19,21 @@ class ChatServiceFirebase implements ChatService {
   final _chatsCollection = FirebaseDatabase.instance.ref();
 
   @override
-  Future<void> createChat({required String userId1, required String userId2}) {
+  Future<Chat> createChat(
+      {required String userId1, required String userId2}) async {
     final chatId = _chatsCollection.push().key;
     if (chatId == null) {
       throw Exception('Chat ID is null');
     }
+    final chat = Chat(chatId: chatId, memberIds: [userId1, userId2]);
 
     final update = <String, Object?>{};
-    update['${FirebaseCollectionName.chats}/$chatId'] =
-        Chat(chatId: chatId, memberIds: [userId1, userId2]).toJson();
+    update['${FirebaseCollectionName.chats}/$chatId'] = chat.toJson();
     update['${FirebaseCollectionName.usersChats}/$userId1}'] = true;
     update['${FirebaseCollectionName.usersChats}/$userId2}'] = true;
 
-    return _chatsCollection.update(update);
+    await _chatsCollection.update(update);
+    return chat;
   }
 
   @override

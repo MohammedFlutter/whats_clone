@@ -4,17 +4,17 @@ import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/services/profile_repository.dart';
 
 class ProfileNotifier extends StateNotifier<ProfileState> {
-  final ProfileRepository profileService;
+  final ProfileRepository _profileService;
 
   ProfileNotifier({
-    required this.profileService,
-  }) : super(const ProfileState());
+    required ProfileRepository profileService,
+  }) : _profileService = profileService, super(const ProfileState());
 
   /// Load a profile by userId.
   Future<void> loadProfile({required String userId}) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      final profile = await profileService.getProfile(userId: userId);
+      final profile = await _profileService.getProfile(userId: userId);
 
       if (profile == null) {
         state = state.copyWith(
@@ -38,7 +38,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> createProfile(Profile profile) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      await profileService.createProfile(profile: profile);
+      await _profileService.createProfile(profile: profile);
 
       state = state.copyWith(
         profile: profile,
@@ -56,7 +56,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> updateProfile(Profile profile) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      await profileService.updateProfile(profile: profile);
+      await _profileService.updateProfile(profile: profile);
 
       state = state.copyWith(
         profile: profile,

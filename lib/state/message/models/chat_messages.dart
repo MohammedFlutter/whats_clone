@@ -9,10 +9,8 @@ part 'chat_messages.g.dart';
 @freezed
 class ChatMessages with _$ChatMessages {
   const factory ChatMessages({
-    @HiveField(0)
-    required String chatId,
-    @HiveField(1)
-    required List<Message> message,
+    @HiveField(0) required String chatId,
+    @HiveField(1) required List<Message> messages,
   }) = _ChatMessages;
 
   factory ChatMessages.fromJson(Map<String, dynamic> json) =>

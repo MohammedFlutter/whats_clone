@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/chat/services/chat_profile_cache.dart';
 import 'package:whats_clone/state/chat/services/chat_service.dart';
 
@@ -13,7 +14,7 @@ class ChatRepository {
   final ChatService _chatService;
   final ChatProfileCache _chatProfileCache;
 
-  Future<void> createChat({required String userId1, required String userId2}) {
+  Future<Chat> createChat({required String userId1, required String userId2}) {
     return _chatService.createChat(userId1: userId1, userId2: userId2);
   }
 
