@@ -9,9 +9,9 @@ class AppContact with _$AppContact {
     required String id,
     required String displayName,
     @Default([]) List<String> phoneNumbers,
-    String? avatarUrl,
 
     // App-specific fields
+    String? avatarUrl,
     String? userId,
     String? bio,
     @Default(false) bool isRegistered,

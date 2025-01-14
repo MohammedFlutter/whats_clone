@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/providers/contacts_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
@@ -121,8 +124,12 @@ class _ContactPageState extends ConsumerState<ContactPage> {
     );
   }
 
-  void _handleRegisteredContact(AppContact contact) {
-    // TODO: Navigate to chat or contact details
+  Future<void> _handleRegisteredContact(AppContact contact) async {
+    final chatProfile = await ref
+        .read(chatNotifierProvider.notifier)
+        .createChat(antherUserId: contact.id);
+    if (!mounted || chatProfile == null) return;
+    context.goNamed(RouteName.chatRoom, extra: chatProfile);
   }
 
   void _handleUnregisteredContact(AppContact contact) {

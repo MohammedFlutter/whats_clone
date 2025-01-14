@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/state/chat/models/chat_profile.dart';
+import 'package:whats_clone/view/chats/chat_room_page.dart';
+import 'package:whats_clone/view/chats/chats_page.dart';
 import 'package:whats_clone/view/contacts/contacts_page.dart';
-import 'package:whats_clone/view/widgets/loading_wrapper.dart';
 import 'package:whats_clone/view/login/login_page.dart';
 import 'package:whats_clone/view/onboarding/onboarding_page.dart';
-import 'package:go_router/go_router.dart';
 import 'package:whats_clone/view/profile/pages/create_profile_page.dart';
 import 'package:whats_clone/view/splash/splash_page.dart';
+import 'package:whats_clone/view/widgets/loading_wrapper.dart';
 import 'package:whats_clone/view/widgets/navigation_wrapper.dart';
 
 final appRouter = GoRouter(
@@ -53,7 +56,19 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/${RouteName.chats}',
               name: RouteName.chats,
-              builder: (context, state) => const Text('chats'),
+              builder: (context, state) => const ChatsPage(),
+              routes: [
+                GoRoute(
+                  path: RouteName.chatRoom,
+                  name: RouteName.chatRoom,
+                  builder: (context, state) {
+                    final chatProfile = state.extra as ChatProfile;
+                    return ChatRoomPage(
+                      chatProfile: chatProfile,
+                    );
+                  },
+                )
+              ],
             )
           ],
         ),
@@ -72,6 +87,6 @@ final appRouter = GoRouter(
   ],
 );
 
-final chatKey = GlobalKey<NavigatorState>();
 final contactsKey = GlobalKey<NavigatorState>();
+final chatKey = GlobalKey<NavigatorState>();
 final moreKey = GlobalKey<NavigatorState>();

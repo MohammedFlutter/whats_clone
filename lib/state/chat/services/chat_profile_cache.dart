@@ -5,6 +5,11 @@ abstract class ChatProfileCache {
   Future<void> updateChatProfiles({required List<ChatProfile> chatProfiles});
 
   List<ChatProfile> getCachedChatProfiles();
+
+  Future<void> updateSingleChatProfile(
+      {required String chatId,
+      required String lastMessage,
+      required DateTime lastMessageTimestamp});
 }
 
 class ChatProfileCacheHive implements ChatProfileCache {
@@ -14,7 +19,8 @@ class ChatProfileCacheHive implements ChatProfileCache {
       : _chatProfileBox = chatProfileBox;
 
   @override
-  Future<void> updateChatProfiles({required List<ChatProfile> chatProfiles}) async {
+  Future<void> updateChatProfiles(
+      {required List<ChatProfile> chatProfiles}) async {
     await _chatProfileBox.clear();
     await _chatProfileBox
         .putAll({for (final chat in chatProfiles) chat.chatId: chat});
@@ -23,5 +29,22 @@ class ChatProfileCacheHive implements ChatProfileCache {
   @override
   List<ChatProfile> getCachedChatProfiles() {
     return _chatProfileBox.values.toList();
+  }
+
+  @override
+  Future<void> updateSingleChatProfile({
+    required String chatId,
+    required String lastMessage,
+    required DateTime lastMessageTimestamp,
+  }) async {
+    final chatProfileInCache = _chatProfileBox.get(chatId);
+    if (chatProfileInCache != null) {
+      final newChatProfile = chatProfileInCache.copyWith(
+        lastMessage: lastMessage,
+        lastMessageTimestamp: lastMessageTimestamp,
+      );
+
+      return _chatProfileBox.put(chatId, newChatProfile);
+    }
   }
 }
