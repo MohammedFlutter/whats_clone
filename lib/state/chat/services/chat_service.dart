@@ -96,6 +96,9 @@ class ChatServiceFirebase implements ChatService {
       (chatIds) {
         final listSteamOfChats =
             chatIds?.map((chatId) => _getChatById(chatId)) ?? [];
+        if (listSteamOfChats.isEmpty) {
+          return Stream.value(<Chat>[]);
+        }
 
         return CombineLatestStream.list<Chat?>(listSteamOfChats).map(
           (chats) {

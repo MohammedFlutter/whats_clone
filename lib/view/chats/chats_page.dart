@@ -52,6 +52,9 @@ class ChatsPage extends ConsumerWidget {
   }
 
   Widget _buildChatList(List<ChatProfile> chatProfiles, WidgetRef ref) {
+    if (chatProfiles.isEmpty) {
+      return const Expanded(child: Center(child: Text(Strings.noChatAvailable)));
+    }
     return Expanded(
       child: ListView.builder(
         itemCount: chatProfiles.length,
