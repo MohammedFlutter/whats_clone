@@ -1,4 +1,5 @@
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/services/contact_service.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
@@ -27,6 +28,7 @@ class ContactRepository {
       profiles = await _profileService.getProfilesByPhoneNumbers(phoneNumbers);
       await _profileCache.updateCacheProfiles(profiles);
     } catch (e) {
+      log.e(e);
       profiles = _profileCache.getCachedProfiles(phoneNumbers);
     }
 

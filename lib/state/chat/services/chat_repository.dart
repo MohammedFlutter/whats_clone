@@ -21,15 +21,15 @@ class ChatRepository {
   Future<void> updateLastMessage(
       {required String chatId,
       required String lastMessage,
-      required DateTime lastMessageTimestamp}) async {
-    await _chatProfileCache.updateSingleChatProfile(
-        chatId: chatId,
-        lastMessage: lastMessage,
-        lastMessageTimestamp: lastMessageTimestamp);
+     }) async {
+    // await _chatProfileCache.updateSingleChatProfile(
+    //     chatId: chatId,
+    //     lastMessage: lastMessage,
+    //     lastMessageTimestamp: lastMessageTimestamp);
     await _chatService.updateChat(
         chatId: chatId,
         lastMessage: lastMessage,
-        lastMessageTimestamp: lastMessageTimestamp);
+   );
   }
 
   Future<void> deleteChat({required String chatId}) async {

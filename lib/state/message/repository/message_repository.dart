@@ -39,7 +39,7 @@ class MessageRepository {
     _chatRepository.updateLastMessage(
         chatId: message.chatId,
         lastMessage: message.content,
-        lastMessageTimestamp: message.createdAt);
+    );
 
     return _messageService.sendMessage(message: message);
   }

@@ -1,4 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/constants/firebase_collection_name.dart';
 
@@ -7,10 +9,10 @@ abstract class ChatService {
 
   Stream<List<Chat>> getChatsByUserId({required String userId});
 
-  Future<void> updateChat(
-      {required String chatId,
-      required String lastMessage,
-      required DateTime lastMessageTimestamp});
+  Future<void> updateChat({
+    required String chatId,
+    required String lastMessage,
+  });
 
   Future<void> deleteChat({required String chatId});
 }
@@ -21,7 +23,8 @@ class ChatServiceFirebase implements ChatService {
   @override
   Future<Chat> createChat(
       {required String userId1, required String userId2}) async {
-    final chatId = _chatsCollection.push().key;
+    final chatId =
+        _chatsCollection.child(FirebaseCollectionName.chats).push().key;
     if (chatId == null) {
       throw Exception('Chat ID is null');
     }
@@ -29,8 +32,8 @@ class ChatServiceFirebase implements ChatService {
 
     final update = <String, Object?>{};
     update['${FirebaseCollectionName.chats}/$chatId'] = chat.toJson();
-    update['${FirebaseCollectionName.usersChats}/$userId1}'] = true;
-    update['${FirebaseCollectionName.usersChats}/$userId2}'] = true;
+    update['${FirebaseCollectionName.usersChats}/$userId2/$chatId'] = true;
+    update['${FirebaseCollectionName.usersChats}/$userId1/$chatId'] = true;
 
     await _chatsCollection.update(update);
     return chat;
@@ -38,65 +41,82 @@ class ChatServiceFirebase implements ChatService {
 
   @override
   Stream<List<Chat>> getChatsByUserId({required String userId}) {
-    final streamOfChatIds =
-        _chatsCollection.child(FirebaseCollectionName.usersChats).onValue.map(
+    final streamOfChatIds = _chatsCollection
+        .child(FirebaseCollectionName.usersChats)
+        .child(userId)
+        .onValue
+        .map(
       (event) {
-        final data = event.snapshot.value as Map<String, dynamic>?;
-        return data?.keys.toList();
+        try {
+          var value = event.snapshot.value;
+
+          if (value is Map) {
+            final data = value.cast<String, dynamic>();
+            return data.keys.toList();
+          }
+          if (value == null) return <String>[];
+
+          throw Exception('Invalid data type');
+        } catch (e, s) {
+          log.e(e, stackTrace: s);
+        }
       },
     );
 
     return _mapChatIdsToChats(streamOfChatIds);
   }
 
-  Future<Chat?> _getChatById(String chatId) async {
-    var dataSnapshot = await _chatsCollection
+  // todo must be [Steam<Chat>]
+  Stream<Chat?> _getChatById(String chatId) {
+    return _chatsCollection
         .child(FirebaseCollectionName.chats)
         .child(chatId)
-        .get();
-    final json = dataSnapshot.value as Map<String, dynamic>?;
+        .onValue
+        .map(
+      (event) {
+        try {
+          final value = event.snapshot.value;
 
-    if (json == null) {
-      return null;
-    } else {
-      return Chat.fromJson(json);
-    }
+          if (value is Map) {
+            final json = value.cast<String, dynamic>();
+            return Chat.fromJson(json);
+          } else {
+            return null;
+          }
+        } catch (e) {
+          log.e(e);
+          rethrow;
+        }
+      },
+    );
   }
 
-  Stream<List<Chat>> _mapChatIdsToChats(
-      Stream<List<String>?> streamOfChatIds) async* {
-    List<Chat> previousChats = [];
+  Stream<List<Chat>> _mapChatIdsToChats(Stream<List<String>?> streamOfChatIds) {
+    return streamOfChatIds.map(
+      (chatIds) {
+        final listSteamOfChats =
+            chatIds?.map((chatId) => _getChatById(chatId)) ?? [];
 
-    await for (final chatIds in streamOfChatIds) {
-      if (chatIds == null || chatIds.isEmpty) {
-        // Yield an empty list if no chat IDs are present
-        if (previousChats.isNotEmpty) {
-          previousChats = [];
-          yield [];
-        }
-        continue;
-      }
+        return CombineLatestStream.list<Chat?>(listSteamOfChats).map(
+          (chats) {
+            final validChats = chats.whereType<Chat>().toList();
 
-      // Fetch chats in parallel
-      final chats = await Future.wait(
-        chatIds.map((chatId) => _getChatById(chatId)),
-      );
+            validChats.sort((a, b) {
+              final aTimestamp = a.lastMessageTimestamp;
+              final bTimestamp = b.lastMessageTimestamp;
+              if (aTimestamp == null && bTimestamp == null) return 0; // Both are null
+              if (aTimestamp == null) return 1; // Null values go last
+              if (bTimestamp == null) return -1; // Null values go last
 
-      // Remove any null values
-      final validChats = chats.whereType<Chat>().toList();
-
-      validChats.sort((a, b) {
-        final aTimestamp = a.lastMessageTimestamp ?? DateTime(0);
-        final bTimestamp = b.lastMessageTimestamp ?? DateTime(0);
-        return bTimestamp.compareTo(aTimestamp);
-      });
-
-      // Yield only if chats have changed
-      if (previousChats != validChats) {
-        previousChats = validChats;
-        yield validChats;
-      }
-    }
+              return bTimestamp.compareTo(aTimestamp); // Compare non-null timestamps
+            });
+            return validChats;
+          },
+        );
+      },
+    ).flatMap(
+      (value) => value,
+    );
   }
 
   @override
@@ -133,11 +153,10 @@ class ChatServiceFirebase implements ChatService {
   Future<void> updateChat({
     required String chatId,
     required String lastMessage,
-    required DateTime lastMessageTimestamp,
   }) {
-    final update = <String, Object?>{
+    final update = <String, dynamic>{
       'lastMessage': lastMessage,
-      'lastMessageTimestamp': lastMessageTimestamp.toIso8601String(),
+      'lastMessageTimestamp': ServerValue.timestamp,
     };
 
     return _chatsCollection

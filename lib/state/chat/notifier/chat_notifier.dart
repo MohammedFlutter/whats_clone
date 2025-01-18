@@ -15,19 +15,31 @@ class ChatNotifier extends Notifier<ChatState> {
   Future<ChatProfile?> createChat({required String antherUserId}) async {
     try {
       state = const ChatState(status: ChatStatus.loading);
+      final chatProfilesState = ref.watch(chatProfileNotifierProvider);
+      if (chatProfilesState.hasValue) {
+        final chatProfile = chatProfilesState.value!
+            .where((element) => element.id == antherUserId)
+            .firstOrNull;
+        if (chatProfile != null) {
+          return chatProfile;
+        }
+      }
+
       final userId = ref.read(authProvider).userId!;
       final newChat = await ref
           .read(chatRepositoryProvider)
           .createChat(userId1: userId, userId2: antherUserId);
       state = const ChatState(status: ChatStatus.created);
       //todo must be modify this code
-      final profile =
-          await ref.read(profileRepositoryProvider).getProfile(userId: userId);
+      final profile = await ref
+          .read(profileRepositoryProvider)
+          .getProfile(userId: antherUserId);
       return ChatProfile(
           id: profile!.userId,
           name: profile.name,
           phone: profile.phoneNumber,
-          chatId: newChat.chatId);
+          chatId: newChat.chatId,
+      avatarUrl: profile.avatarUrl,);
     } catch (error, stackTrace) {
       log.e(error, stackTrace: stackTrace);
       state = ChatState(status: ChatStatus.error, error: error.toString());

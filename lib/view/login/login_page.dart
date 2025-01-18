@@ -81,16 +81,14 @@ class LoginPageBody extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const LoginHeader(),
-            AppFillButton(
-                text: Strings.signInWithGoogle,
-                onPressed: authEvent.signInWithGoogle),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          const LoginHeader(),
+          AppFillButton(
+              text: Strings.signInWithGoogle,
+              onPressed: authEvent.signInWithGoogle),
+        ],
       ),
     );
   }

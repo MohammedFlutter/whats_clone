@@ -4,13 +4,21 @@ import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 
 class ChatProfileNotifier extends StreamNotifier<List<ChatProfile>> {
+
   @override
-  Raw<Stream<List<ChatProfile>>> build() {
+  Stream<List<ChatProfile>> build() {
     final userId = ref.watch(authProvider).userId!;
 
     return ref
         .watch(chatProfileRepositoryProvider)
-        .getChatProfiles(userId: userId);
+        .getChatProfiles(userId: userId)
+        .map(
+          (chatsProfiles) => chatsProfiles
+            .where(
+              (chat) =>
+                  chat.lastMessage != null && chat.lastMessageTimestamp != null,
+            ).toList(),
+        );
   }
 
   ChatProfile? getChatProfileByProfileId(String profileId) =>

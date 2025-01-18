@@ -14,6 +14,7 @@ class ChatProfile with _$ChatProfile {
     @HiveField(3) required String chatId,
     @HiveField(4) String? lastMessage,
     @HiveField(5) DateTime? lastMessageTimestamp,
+    @HiveField(6) String? avatarUrl,
   }) = _ChatProfile;
 
   factory ChatProfile.fromJson(Map<String, dynamic> json) =>

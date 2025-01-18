@@ -5,8 +5,7 @@ class AppSearchBar extends StatelessWidget {
     super.key,
     required String hintText,
     void Function(String)? onChanged,
-  })  :
-        _hintText = hintText,
+  })  : _hintText = hintText,
         _onChanged = onChanged;
   final String _hintText;
 

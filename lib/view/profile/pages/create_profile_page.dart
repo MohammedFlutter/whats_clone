@@ -1,3 +1,4 @@
+import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -108,6 +109,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
 
     final avatarUrl =
         await ref.read(imagePickerProvider.notifier).uploadImage();
+    final phone = PhoneNumberUtil.instance.parse('$_dialCode${_phoneController.text}', _dialCode);
 
     final profileState = ref.read(imagePickerProvider);
     // if false, the image is  uploaded successfully or not selected
@@ -119,7 +121,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
       avatarUrl: avatarUrl,
       name: _nameController.text,
       email: user.email,
-      phoneNumber: '${_dialCode.substring(1)}${_phoneController.text}',
+      phoneNumber: '${_dialCode.substring(1)}${phone.nationalNumber}',
       bio: _bioController.text,
       createdAt: DateTime.now(),
     );

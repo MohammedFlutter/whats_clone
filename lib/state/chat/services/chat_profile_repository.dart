@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/chat/services/chat_profile_cache.dart';
 import 'package:whats_clone/state/chat/services/chat_service.dart';
@@ -59,6 +60,7 @@ class ChatProfileRepository {
           return ChatProfile(
             id: otherProfile.userId,
             name: otherProfile.name,
+            avatarUrl: otherProfile.avatarUrl,
             phone: otherProfile.phoneNumber,
             chatId: chat.chatId,
             lastMessage: chat.lastMessage,
@@ -69,6 +71,7 @@ class ChatProfileRepository {
         await _chatProfileCache.updateChatProfiles(chatProfiles: chatProfiles);
         return chatProfiles;
       } catch (e) {
+        log.e(e);
         return _chatProfileCache.getCachedChatProfiles();
       }
     });

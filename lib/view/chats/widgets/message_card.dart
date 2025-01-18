@@ -23,7 +23,7 @@ class MessageCard extends ConsumerWidget {
             : AppColors.surface
         : AppColors.offWhite;
     final cardColor = isCurrentUser
-        ? Theme.of(context).colorScheme.surface
+        ? Theme.of(context).colorScheme.surfaceContainerHigh
         : Theme.of(context).colorScheme.primary;
 
     return Row(

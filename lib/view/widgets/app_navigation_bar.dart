@@ -72,7 +72,6 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
             ),
           )
           .toList(),
-
       selectedIndex: _selectedIndex,
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       onDestinationSelected: _onDestinationSelected,

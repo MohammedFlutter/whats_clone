@@ -13,7 +13,7 @@ final contactServicesProvider = Provider<ContactService>(
 
     if (profile == null) throw Exception('Profile is null');
     final phoneNumber =
-        PhoneNumberUtil.instance.parse(profile.phoneNumber, null);
+        PhoneNumberUtil.instance.parse('+${profile.phoneNumber}', null);
     final defaultRegionCode = PhoneNumberUtil.instance
         .getRegionCodeForCountryCode(phoneNumber.countryCode);
     return ContactService(defaultRegionCode: defaultRegionCode);
