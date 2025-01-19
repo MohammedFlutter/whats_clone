@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
               GoogleFonts.mulishTextTheme(AppTheme.lightTheme.textTheme)),
       darkTheme: AppTheme.darkTheme.copyWith(
           textTheme: GoogleFonts.mulishTextTheme(AppTheme.darkTheme.textTheme)),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       routerConfig: appRouter,
     );
   }

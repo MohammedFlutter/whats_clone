@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/services/profile_repository.dart';
@@ -27,6 +28,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         status: ProfileStatus.loaded,
       );
     } catch (e) {
+      log.e(e);
       state = state.copyWith(
         errorMessage: e.toString(),
         status: ProfileStatus.error,
@@ -45,6 +47,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         status: ProfileStatus.created,
       );
     } catch (e) {
+      log.e(e);
       state = state.copyWith(
         errorMessage: e.toString(),
         status: ProfileStatus.error,
@@ -63,6 +66,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         status: ProfileStatus.updated,
       );
     } catch (e) {
+      log.e(e);
       state = state.copyWith(
         errorMessage: e.toString(),
         status: ProfileStatus.error,

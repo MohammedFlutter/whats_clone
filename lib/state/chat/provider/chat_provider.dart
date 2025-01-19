@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
+import 'package:whats_clone/state/chat/models/chat_state.dart';
 import 'package:whats_clone/state/chat/notifier/chat_notifier.dart';
 import 'package:whats_clone/state/chat/notifier/chat_profile_notifier.dart';
 import 'package:whats_clone/state/chat/services/chat_profile_cache.dart';
@@ -12,9 +13,7 @@ import 'package:whats_clone/state/profile/providers/profile_state_provider.dart'
 import 'package:whats_clone/view/chats/chats_page.dart';
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
-  return ChatRepository(
-      chatService: ref.watch(chatServiceProvider),
-      chatProfileCache: ref.watch(chatProfileCacheProvider));
+  return ChatRepository(chatService: ref.watch(chatServiceProvider));
 });
 final chatProfileRepositoryProvider = Provider<ChatProfileRepository>((ref) {
   return ChatProfileRepository(
@@ -33,7 +32,7 @@ final chatServiceProvider = Provider<ChatService>(
 );
 
 final chatNotifierProvider =
-    NotifierProvider<ChatNotifier, void>(ChatNotifier.new);
+    NotifierProvider<ChatNotifier, ChatState>(ChatNotifier.new);
 final chatProfileNotifierProvider =
     StreamNotifierProvider<ChatProfileNotifier, List<ChatProfile>>(
         ChatProfileNotifier.new);

@@ -64,7 +64,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
           return ref.watch(contactsProvider).when(
                 data: _buildContactList,
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) => Center(child: Text('Error: $error')),
+                error: (error, _) => Center(child: Text(error.toString())),
               );
         },
       ),
@@ -127,7 +127,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
   Future<void> _handleRegisteredContact(AppContact contact) async {
     final chatProfile = await ref
         .read(chatNotifierProvider.notifier)
-        .createChat(antherUserId: contact.id);
+        .createChat(antherUserId: contact.userId!);
     if (!mounted || chatProfile == null) return;
     context.goNamed(RouteName.chatRoom, extra: chatProfile);
   }

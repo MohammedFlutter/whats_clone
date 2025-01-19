@@ -10,6 +10,8 @@ class ContactService {
   ContactService({required this.defaultRegionCode});
 
   Future<List<Contact>> getContacts() async {
+
+
     _cachedContacts ??= await FlutterContacts.getContacts(
       deduplicateProperties: true,
       withProperties: true,

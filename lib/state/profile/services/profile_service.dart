@@ -52,13 +52,25 @@ class ProfileServiceFirebase implements ProfileService {
       List<String> phoneNumbers) async {
     if (phoneNumbers.isEmpty) return [];
 
-    final querySnapshot = await _profilesCollection
-        .where(FirebaseFieldName.phoneNumber, whereIn: phoneNumbers)
-        .get();
+    List<Profile> profiles = [];
 
-    return querySnapshot.docs
-        .map((doc) => Profile.fromJson(doc.data()))
-        .toList();
+    // Split phoneNumbers into chunks of 30
+    for (var i = 0; i < phoneNumbers.length; i += 30) {
+      final chunk = phoneNumbers.sublist(
+        i,
+        i + 30 > phoneNumbers.length ? phoneNumbers.length : i + 30,
+      );
+
+      final querySnapshot = await _profilesCollection
+          .where(FirebaseFieldName.phoneNumber, whereIn: chunk)
+          .get();
+
+      profiles.addAll(querySnapshot.docs
+          .map((doc) => Profile.fromJson(doc.data()))
+          .toList());
+    }
+
+    return profiles;
   }
 
   @override

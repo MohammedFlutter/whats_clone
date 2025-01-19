@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whats_clone/core/theme/app_colors.dart';
 import 'package:whats_clone/core/theme/app_text_style.dart';
-import 'package:whats_clone/core/utils/extensions/list_extension.dart';
 
 final _borderRadius = BorderRadius.circular(16);
 
@@ -23,44 +22,50 @@ class AppListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ImageAvatar(
-              url: avatarUrl,
-              name: title,
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
+    return LayoutBuilder(
+      builder: (context, constraints) => ConstrainedBox(
+        constraints:
+            constraints.copyWith(maxWidth: MediaQuery.sizeOf(context).width),
+        child: InkWell(
+          onTap: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                ImageAvatar(
+                  url: avatarUrl,
+                  name: title,
                 ),
-                if (subtitle != null)
+                const SizedBox(
+                  width: 12,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    if (subtitle != null)
+                      Text(
+                        subtitle!,
+                        style: AppTextStyles.metadata1
+                            .copyWith(color: AppColors.disable),
+                      )
+                  ],
+                ),
+                const Spacer(),
+                if (trailing != null)
                   Text(
-                    subtitle!,
+                    trailing!,
                     style: AppTextStyles.metadata1
                         .copyWith(color: AppColors.disable),
-                  )
+                  ),
               ],
             ),
-            const Spacer(),
-            if (trailing != null)
-              Text(
-                trailing!,
-                style:
-                    AppTextStyles.metadata1.copyWith(color: AppColors.disable),
-              ),
-          ],
+          ),
         ),
       ),
     );
@@ -79,16 +84,17 @@ class ImageAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firstTwoLetter = name.isEmpty
-        ? ''
-        : name
-            .trim()
-            .split(' ')
-            .safeSubRange(0, 2)
-            .map(
-              (word) => word.substring(0, 1).toUpperCase(),
-            )
+    String firstTwoLetters = '';
+    if (url == null) {
+      if (name.isNotEmpty) {
+        List<String> words = name.trim().split(' ');
+        firstTwoLetters = words
+            .take(2) // Take at most 2 words
+            .map((word) =>
+                word.isNotEmpty ? word[0].toUpperCase() : '') // Check each word
             .join('');
+      }
+    }
 
     return Container(
       width: 48,
@@ -108,7 +114,7 @@ class ImageAvatar extends StatelessWidget {
       child: (url == null)
           ? Center(
               child: Text(
-                firstTwoLetter,
+                firstTwoLetters,
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge

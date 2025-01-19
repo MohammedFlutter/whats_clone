@@ -46,6 +46,7 @@ class Strings {
   static const inviteToApp = 'Invite to ${Strings.appTitle}';
   // chats
   static const searchChat = 'Search chat...';
+  static const noChatAvailable = 'No chats available.';
 
 
 }

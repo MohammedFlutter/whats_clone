@@ -16,8 +16,9 @@ class MessageNotifier
       chatId: arg,
       content: content,
       senderId: ref.read(authProvider).userId!,
-      createdAt: DateTime.now(),
+      // createdAt: DateTime.now(),
     );
+
 
     ref.read(messageRepositoryProvider).sendMessage(message: message);
   }

@@ -6,9 +6,11 @@ import 'package:whats_clone/view/constants/icons_assets.dart';
 final draftText = StateProvider.autoDispose<String>((ref) => '');
 
 class FooterChatRoom extends ConsumerWidget {
-  const FooterChatRoom(this.onSend, {super.key});
+  const FooterChatRoom({super.key, required this.onSend, required this.controller});
 
   final VoidCallback onSend;
+  final TextEditingController controller;
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,9 +19,9 @@ class FooterChatRoom extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Row(
         children: [
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 200),
+          Expanded(
             child: TextField(
+              controller:controller ,
               onChanged: (value) => ref.read(draftText.notifier).state = value,
               autofocus: true,
             ),
