@@ -3,7 +3,7 @@ import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/image_upload/model/upload_state.dart';
 import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 
 final loadingProvider = Provider<bool>((ref) =>
         ref.watch(authProvider).isLoading ||

@@ -4,7 +4,7 @@ import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 
 class SplashNotifier extends Notifier<AsyncValue<void>> {
   @override

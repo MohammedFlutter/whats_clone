@@ -7,7 +7,7 @@ import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/login/widgets/login_header.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';

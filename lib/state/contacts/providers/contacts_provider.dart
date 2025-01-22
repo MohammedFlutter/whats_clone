@@ -4,7 +4,7 @@ import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/notifier/contact_notifier.dart';
 import 'package:whats_clone/state/contacts/services/contact_repository.dart';
 import 'package:whats_clone/state/contacts/services/contact_service.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/view/contacts/contacts_page.dart';
 
 final contactServicesProvider = Provider<ContactService>(

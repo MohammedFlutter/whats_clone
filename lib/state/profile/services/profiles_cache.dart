@@ -6,7 +6,9 @@ abstract class ProfilesCache {
     List<Profile> profiles,
   );
 
-  List<Profile> getCachedProfiles(List<String> phoneNumbers);
+  List<Profile> getCachedProfiles(List<String> userIds);
+
+  List<Profile> getCachedProfilesByPhoneNumbers(List<String> phoneNumbers);
 }
 
 class ProfilesCacheHive implements ProfilesCache {
@@ -20,16 +22,25 @@ class ProfilesCacheHive implements ProfilesCache {
   ) async {
     await profileBox.clear();
     for (final profile in profiles) {
-      await profileBox.put(profile.phoneNumber, profile);
+      await profileBox.put(profile.userId, profile);
     }
   }
 
   @override
-  List<Profile> getCachedProfiles(List<String> phoneNumbers) {
-    return phoneNumbers
+  List<Profile> getCachedProfiles(List<String> userIds) {
+    return userIds
         .map((phone) => profileBox.get(phone))
         .where((profile) => profile != null)
         .cast<Profile>()
         .toList();
+  }
+
+  @override
+  List<Profile> getCachedProfilesByPhoneNumbers(List<String> phoneNumbers) {
+    return profileBox.values
+          .where(
+            (profile) => phoneNumbers.contains(profile.phoneNumber),
+          )
+          .toList();
   }
 }

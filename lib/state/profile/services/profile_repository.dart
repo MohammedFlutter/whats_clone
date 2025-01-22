@@ -11,7 +11,7 @@ class ProfileRepository {
 
   final ProfileCache _profileCache;
   final ProfileService _profileService;
-
+  
   Future<Profile?> getProfile({required String userId}) async {
     final cachedProfile = _profileCache.getCurrentProfile(userId: userId);
     if (cachedProfile != null) {

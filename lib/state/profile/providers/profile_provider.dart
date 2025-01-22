@@ -8,6 +8,7 @@ import 'package:whats_clone/state/profile/services/profile_cache.dart';
 import 'package:whats_clone/state/profile/services/profile_repository.dart';
 import 'package:whats_clone/state/profile/services/profile_service.dart';
 import 'package:whats_clone/state/profile/services/profiles_cache.dart';
+import 'package:whats_clone/state/profile/services/profiles_repository.dart';
 
 final profileServiceProvider = Provider<ProfileService>(
   (_) => ProfileServiceFirebase(),
@@ -31,6 +32,11 @@ final profileRepositoryProvider = Provider<ProfileRepository>(
     profileService: ref.watch(profileServiceProvider),
     profileCache: ref.watch(profileCacheProvider),
   ),
+);
+final profilesRepositoryProvider = Provider<ProfilesRepository>(
+  (ref) => ProfilesRepository(
+      profileService: ref.watch(profileServiceProvider),
+      profilesCache: ref.watch(profilesCacheProvider)),
 );
 
 final profileNotifierProvider =
