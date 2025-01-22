@@ -9,7 +9,7 @@ import 'package:whats_clone/state/chat/services/chat_profile_repository.dart';
 import 'package:whats_clone/state/chat/services/chat_repository.dart';
 import 'package:whats_clone/state/chat/services/chat_service.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/view/chats/chats_page.dart';
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
@@ -18,7 +18,7 @@ final chatRepositoryProvider = Provider<ChatRepository>((ref) {
 final chatProfileRepositoryProvider = Provider<ChatProfileRepository>((ref) {
   return ChatProfileRepository(
     chatService: ref.watch(chatServiceProvider),
-    profileService: ref.watch(profileServiceProvider),
+    profileRepository: ref.watch(profilesRepositoryProvider),
     chatProfileCache: ref.watch(chatProfileCacheProvider),
   );
 });
@@ -46,7 +46,7 @@ final chatProfileSearchProvider =
       .where((chatProfile) =>
               chatProfile.name.toLowerCase().contains(query.toLowerCase()) ||
               chatProfile.phone.toLowerCase().contains(query.toLowerCase())
-          // nice to add more search criteria
+          // add more search criteria
           )
       .toList();
 });

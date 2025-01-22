@@ -5,7 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/providers/contacts_provider.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/state/providers/permission_provider.dart';
 
 class ContactNotifier extends AsyncNotifier<List<AppContact>> {

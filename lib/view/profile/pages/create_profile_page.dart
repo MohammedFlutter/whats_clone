@@ -8,7 +8,7 @@ import 'package:whats_clone/state/image_upload/model/upload_state.dart';
 import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/profile/widgets/form_content.dart';
 import 'package:whats_clone/view/widgets/app_snake_bar.dart';

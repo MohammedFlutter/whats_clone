@@ -6,7 +6,7 @@ import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/chat/models/chat_state.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
-import 'package:whats_clone/state/profile/providers/profile_state_provider.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 
 class ChatNotifier extends Notifier<ChatState> {
   @override

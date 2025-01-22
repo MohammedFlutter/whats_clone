@@ -12,7 +12,7 @@ abstract class ProfileService {
 
   Future<List<Profile>> getProfilesByPhoneNumbers(List<String> phoneNumbers);
 
-  Future<List<Profile>> getProfileByUsersId({required List<String> usersId});
+  Future<List<Profile>> getProfileByUserIds({required List<String> userIds});
 }
 
 class ProfileServiceFirebase implements ProfileService {
@@ -33,36 +33,40 @@ class ProfileServiceFirebase implements ProfileService {
   }
 
   @override
-  Future<List<Profile>> getProfileByUsersId(
-      {required List<String> usersId}) async {
-    if (usersId.isEmpty) return [];
-
-    final querySnapshot = await _profilesCollection
-        .where(FirebaseFieldName.userId, whereIn: usersId)
-        .get();
-
-    return querySnapshot.docs
-        .map((doc) => Profile.fromJson(doc.data()))
-        .toList();
+  Future<List<Profile>> getProfileByUserIds(
+      {required List<String> userIds}) async {
+    return _getProfiles(
+      firebaseFieldName: FirebaseFieldName.userId,
+      values: userIds,
+    );
   }
 
   /// need for match contacts with profiles
   @override
   Future<List<Profile>> getProfilesByPhoneNumbers(
       List<String> phoneNumbers) async {
-    if (phoneNumbers.isEmpty) return [];
+    return _getProfiles(
+      firebaseFieldName: FirebaseFieldName.phoneNumber,
+      values: phoneNumbers,
+    );
+  }
+
+  Future<List<Profile>> _getProfiles({
+    required String firebaseFieldName,
+    required List<String> values,
+  }) async {
+    if (values.isEmpty) return [];
 
     List<Profile> profiles = [];
 
-    // Split phoneNumbers into chunks of 30
-    for (var i = 0; i < phoneNumbers.length; i += 30) {
-      final chunk = phoneNumbers.sublist(
+    for (var i = 0; i < values.length; i += 30) {
+      final chunk = values.sublist(
         i,
-        i + 30 > phoneNumbers.length ? phoneNumbers.length : i + 30,
+        i + 30 > values.length ? values.length : i + 30,
       );
 
       final querySnapshot = await _profilesCollection
-          .where(FirebaseFieldName.phoneNumber, whereIn: chunk)
+          .where(firebaseFieldName, whereIn: chunk)
           .get();
 
       profiles.addAll(querySnapshot.docs

@@ -29,7 +29,7 @@ class ContactRepository {
       await _profileCache.updateCacheProfiles(profiles);
     } catch (e) {
       log.e(e);
-      profiles = _profileCache.getCachedProfiles(phoneNumbers);
+      profiles = _profileCache.getCachedProfilesByPhoneNumbers(phoneNumbers);
     }
 
     return _mapContactsToAppContacts(contacts, profiles);
