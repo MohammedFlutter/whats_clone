@@ -6,6 +6,7 @@ import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/image_upload/model/upload_state.dart';
 import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
+import 'package:whats_clone/state/notification/providers/notification_provider.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
@@ -42,6 +43,7 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
       profileNotifierProvider,
       (_, state) {
         if (state.status == ProfileStatus.created) {
+          ref.read(notificationServiceProvider).initialize();
           context.goNamed(RouteName.contacts);
         }
         if (state.status == ProfileStatus.error) {
@@ -109,7 +111,8 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
 
     final avatarUrl =
         await ref.read(imagePickerProvider.notifier).uploadImage();
-    final phone = PhoneNumberUtil.instance.parse('$_dialCode${_phoneController.text}', _dialCode);
+    final phone = PhoneNumberUtil.instance
+        .parse('$_dialCode${_phoneController.text}', _dialCode);
 
     final profileState = ref.read(imagePickerProvider);
     // if false, the image is  uploaded successfully or not selected

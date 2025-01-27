@@ -15,7 +15,7 @@ class ChatNotifier extends Notifier<ChatState> {
   Future<ChatProfile?> createChat({required String antherUserId}) async {
     try {
       state = const ChatState(status: ChatStatus.loading);
-      final chatProfilesState = ref.watch(chatProfileNotifierProvider);
+      final chatProfilesState = ref.watch(chatProfilesNotifierProvider);
       if (chatProfilesState.hasValue) {
         final chatProfile = chatProfilesState.value!
             .where((element) => element.id == antherUserId)

@@ -46,6 +46,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
         profile: profile,
         status: ProfileStatus.created,
       );
+
     } catch (e) {
       log.e(e);
       state = state.copyWith(

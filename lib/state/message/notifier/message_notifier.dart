@@ -3,6 +3,7 @@ import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/message/models/chat_messages.dart';
 import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/message/provider/message_provider.dart';
+import 'package:whats_clone/state/notification/providers/notification_provider.dart';
 
 class MessageNotifier
     extends AutoDisposeFamilyStreamNotifier<ChatMessages, String> {
@@ -13,12 +14,12 @@ class MessageNotifier
 
   void sendMessage(String chatId, String content) {
     final message = Message(
-      chatId: arg,
+      chatId: chatId,
       content: content,
       senderId: ref.read(authProvider).userId!,
     );
 
-
+    // Send message to repository
     ref.read(messageRepositoryProvider).sendMessage(message: message);
   }
 }

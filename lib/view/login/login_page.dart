@@ -6,6 +6,7 @@ import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
+import 'package:whats_clone/state/notification/providers/notification_provider.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
@@ -54,6 +55,7 @@ class LoginPage extends ConsumerWidget {
 
     final String routeName;
     if (profileStatus == ProfileStatus.loaded) {
+      await ref.read(notificationServiceProvider).initialize();
       routeName = RouteName.chats;
     } else if (profileStatus == ProfileStatus.noProfile) {
       routeName = RouteName.createProfile;

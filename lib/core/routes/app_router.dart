@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/routes/route_params.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/view/chats/chat_room_page.dart';
 import 'package:whats_clone/view/chats/chats_page.dart';
@@ -14,6 +15,7 @@ import 'package:whats_clone/view/widgets/navigation_wrapper.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/${RouteName.splash}',
+  navigatorKey: navigatorKey,
   routes: [
     GoRoute(
       path: '/${RouteName.splash}',
@@ -59,12 +61,12 @@ final appRouter = GoRouter(
               builder: (context, state) => const ChatsPage(),
               routes: [
                 GoRoute(
-                  path: RouteName.chatRoom,
+                  path: '${RouteName.chatRoom}/:${RouteParams.chatId}',
                   name: RouteName.chatRoom,
                   builder: (context, state) {
-                    final chatProfile = state.extra as ChatProfile;
+                    final chatId = state.pathParameters[RouteParams.chatId]!;
                     return ChatRoomPage(
-                      chatProfile: chatProfile,
+                       chatId: chatId,
                     );
                   },
                 )
@@ -87,6 +89,7 @@ final appRouter = GoRouter(
   ],
 );
 
+final navigatorKey = GlobalKey<NavigatorState>();
 final contactsKey = GlobalKey<NavigatorState>();
 final chatKey = GlobalKey<NavigatorState>();
 final moreKey = GlobalKey<NavigatorState>();

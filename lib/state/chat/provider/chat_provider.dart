@@ -33,13 +33,13 @@ final chatServiceProvider = Provider<ChatService>(
 
 final chatNotifierProvider =
     NotifierProvider<ChatNotifier, ChatState>(ChatNotifier.new);
-final chatProfileNotifierProvider =
+final chatProfilesNotifierProvider =
     StreamNotifierProvider<ChatProfileNotifier, List<ChatProfile>>(
         ChatProfileNotifier.new);
 
 final chatProfileSearchProvider =
     Provider.autoDispose<List<ChatProfile>>((ref) {
-  final chatProfiles = ref.watch(chatProfileNotifierProvider).value;
+  final chatProfiles = ref.watch(chatProfilesNotifierProvider).value;
   if (chatProfiles == null || chatProfiles.isEmpty) return [];
   final query = ref.watch(chatQueryProvider.notifier).state;
   return chatProfiles
@@ -50,3 +50,9 @@ final chatProfileSearchProvider =
           )
       .toList();
 });
+
+final chatProfileProvider = AutoDisposeProviderFamily<ChatProfile?, String>(
+  (ref, arg) => ref.watch(chatProfilesNotifierProvider).value?.firstWhere(
+        (element) => element.chatId == arg,
+      ),
+);
