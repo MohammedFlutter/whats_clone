@@ -5,18 +5,37 @@ import 'package:whats_clone/state/splash/provider/splash_provider.dart';
 import 'package:whats_clone/view/constants/images.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 
-class SplashPage extends ConsumerWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SplashPage> createState() => _SplashPageState();
+}
+
+class _SplashPageState extends ConsumerState<SplashPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async {
+        final route = await ref.read(splashProvider.notifier).initialize();
+        if (mounted) {
+          context.goNamed(route);
+        }
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Run initialization on first build
-    Future(() async {
-      final route = await ref.read(splashProvider.notifier).initialize();
-      if (context.mounted) {
-        context.goNamed(route);
-      }
-    });
+    // Future(() async {
+    //   final route = await ref.read(splashProvider.notifier).initialize();
+    //   if (context.mounted) {
+    //     context.goNamed(route);
+    //   }
+    // });
 
     // Determine logo based on theme
     final isLight = Theme.of(context).brightness == Brightness.light;

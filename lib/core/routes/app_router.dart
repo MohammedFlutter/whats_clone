@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/routes/route_params.dart';
-import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/view/chats/chat_room_page.dart';
 import 'package:whats_clone/view/chats/chats_page.dart';
 import 'package:whats_clone/view/contacts/contacts_page.dart';
@@ -10,6 +9,7 @@ import 'package:whats_clone/view/login/login_page.dart';
 import 'package:whats_clone/view/onboarding/onboarding_page.dart';
 import 'package:whats_clone/view/profile/pages/create_profile_page.dart';
 import 'package:whats_clone/view/splash/splash_page.dart';
+import 'package:whats_clone/view/widgets/app_wrapper.dart';
 import 'package:whats_clone/view/widgets/loading_wrapper.dart';
 import 'package:whats_clone/view/widgets/navigation_wrapper.dart';
 
@@ -39,8 +39,9 @@ final appRouter = GoRouter(
           const LoadingWrapper(child: CreateProfilePage()),
     ),
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) =>
-          NavigationWrapper(navigationShell: navigationShell),
+      builder: (context, state, navigationShell) => AppWrapper(
+        child: NavigationWrapper(navigationShell: navigationShell),
+      ),
       branches: <StatefulShellBranch>[
         StatefulShellBranch(
           navigatorKey: contactsKey,
@@ -66,7 +67,7 @@ final appRouter = GoRouter(
                   builder: (context, state) {
                     final chatId = state.pathParameters[RouteParams.chatId]!;
                     return ChatRoomPage(
-                       chatId: chatId,
+                      chatId: chatId,
                     );
                   },
                 )

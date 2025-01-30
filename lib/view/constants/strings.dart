@@ -47,6 +47,8 @@ class Strings {
   // chats
   static const searchChat = 'Search chat...';
   static const noChatAvailable = 'No chats available.';
+  static const online = 'Online';
+
 
 
 }

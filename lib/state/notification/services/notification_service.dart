@@ -15,8 +15,6 @@ import 'package:whats_clone/state/notification/services/fcm_token_repository.dar
 //   await NotificationService.instance.showNotification(message);
 // }
 
-
-
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
@@ -49,7 +47,7 @@ class NotificationService {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      log.i('User granted notification permissions');
+      // log.i('User granted notification permissions');
     } else {
       log.w('User denied notification permissions');
     }
@@ -60,7 +58,7 @@ class NotificationService {
     // Get current token
     final token = await _firebaseMessaging.getToken();
     if (token != null) {
-      log.i('FCM Token retrieved: $token');
+      // log.i('FCM Token retrieved: $token');
       await _fcmTokenRepository
           .setToken(FcmToken(token: token, userId: userId));
     }

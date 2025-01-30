@@ -3,7 +3,6 @@ import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/message/models/chat_messages.dart';
 import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/message/provider/message_provider.dart';
-import 'package:whats_clone/state/notification/providers/notification_provider.dart';
 
 class MessageNotifier
     extends AutoDisposeFamilyStreamNotifier<ChatMessages, String> {

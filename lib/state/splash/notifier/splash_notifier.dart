@@ -2,10 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
-import 'package:whats_clone/state/notification/providers/notification_provider.dart';
 import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
+import 'package:whats_clone/state/providers/app_initializer.dart';
 
 class SplashNotifier extends Notifier<AsyncValue<void>> {
   @override
@@ -39,7 +39,7 @@ class SplashNotifier extends Notifier<AsyncValue<void>> {
       final profileStatus = profileState.status;
       if (profileStatus == ProfileStatus.loaded) {
         // Initialize notification service
-        await ref.read(notificationServiceProvider).initialize();
+        await ref.read(appInitializerProvider.notifier).initialize();
         return RouteName.chats;
       }
       if (profileStatus == ProfileStatus.noProfile) {

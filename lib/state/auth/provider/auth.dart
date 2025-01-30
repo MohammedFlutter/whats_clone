@@ -1,13 +1,18 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/auth/backend/authenticator.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:whats_clone/core/utils/logger.dart';
+import 'package:whats_clone/state/profile/models/profile_state.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
+import 'package:whats_clone/state/providers/app_initializer.dart';
 
-part 'auth.g.dart';
+final authProvider =
+    NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
-@riverpod
-class Auth extends _$Auth {
+// @Riverpod(keepAlive: true,)
+class AuthNotifier extends Notifier<AuthState> {
   final Authenticator _authenticator = Authenticator();
 
   // Auth({required this.authenticator});
@@ -32,10 +37,32 @@ class Auth extends _$Auth {
     final userId = _authenticator.userId;
     final email = _authenticator.email;
     if (result == AuthResult.success && userId != null) {
-      state = AuthState(authResult: result, userId: userId, email:email ,isLoading: false);
+      state = AuthState(
+          authResult: result, userId: userId, email: email, isLoading: false);
     } else {
       log.i(result.toString());
       state = AuthState.unknown();
+    }
+  }
+
+  Future<String> handleSuccessfulLogin() async {
+    final userId = state.userId!;
+    await ref
+        .read(profileNotifierProvider.notifier)
+        .loadProfile(userId: userId);
+
+    final profileStatus = ref.read(profileNotifierProvider).status;
+
+    if (profileStatus == ProfileStatus.loaded) {
+      await ref.read(appInitializerProvider.notifier).initialize();
+      return RouteName.chats;
+    } else if (profileStatus == ProfileStatus.noProfile) {
+      return RouteName.createProfile;
+    } else if (profileStatus == ProfileStatus.error) {
+      throw Exception('Error loading profile');
+    } else {
+      log.e('Unknown profile status: $profileStatus');
+      return '';
     }
   }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/message/provider/message_provider.dart';
-import 'package:whats_clone/state/profile/providers/profile_provider.dart';
+import 'package:whats_clone/state/user_presence/provider/user_presence_provider.dart';
 import 'package:whats_clone/view/chats/widgets/footer_chat_room.dart';
 import 'package:whats_clone/view/chats/widgets/message_card.dart';
 
@@ -25,7 +24,16 @@ class ChatRoomPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(chatProfile.name),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(chatProfile.name),
+            Text(
+              ref.watch(subtitleChatRoomProvider(chatProfile.id)),
+              style: Theme.of(context).textTheme.bodyMedium,
+            )
+          ],
+        ),
       ),
       body: Column(
         children: [

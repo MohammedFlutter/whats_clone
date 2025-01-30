@@ -2,20 +2,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
-import 'package:whats_clone/state/profile/services/profile_repository.dart';
+import 'package:whats_clone/state/profile/providers/profile_provider.dart';
+import 'package:whats_clone/state/providers/app_initializer.dart';
 
-class ProfileNotifier extends StateNotifier<ProfileState> {
-  final ProfileRepository _profileService;
-
-  ProfileNotifier({
-    required ProfileRepository profileService,
-  }) : _profileService = profileService, super(const ProfileState());
+class ProfileNotifier extends Notifier<ProfileState> {
+  @override
+  ProfileState build() {
+    return const ProfileState();
+  }
 
   /// Load a profile by userId.
   Future<void> loadProfile({required String userId}) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      final profile = await _profileService.getProfile(userId: userId);
+      final profile =
+          await ref.watch(profileServiceProvider).getProfile(userId: userId);
 
       if (profile == null) {
         state = state.copyWith(
@@ -40,13 +41,13 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> createProfile(Profile profile) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      await _profileService.createProfile(profile: profile);
+      await ref.watch(profileServiceProvider).createProfile(profile: profile);
 
       state = state.copyWith(
         profile: profile,
         status: ProfileStatus.created,
       );
-
+      await ref.read(appInitializerProvider.notifier).initialize();
     } catch (e) {
       log.e(e);
       state = state.copyWith(
@@ -60,7 +61,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   Future<void> updateProfile(Profile profile) async {
     state = state.copyWith(status: ProfileStatus.loading);
     try {
-      await _profileService.updateProfile(profile: profile);
+      await ref.watch(profileServiceProvider).updateProfile(profile: profile);
 
       state = state.copyWith(
         profile: profile,

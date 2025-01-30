@@ -3,10 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whats_clone/core/routes/app_router.dart';
@@ -35,26 +33,25 @@ Future<void> main() async {
     anonKey: supabaseApikey,
   );
 
-  var accessToken = await () async {
-    // final serviceAccountKey = await rootBundle.loadString('assets/your-service-account.json');
-    // final credentials = ServiceAccountCredentials.fromJson(json.decode(serviceAccountKey));
-    final credentials = ServiceAccountCredentials.fromJson(firebaseAdmin);
-
-    final scopes = ['https://www.googleapis.com/auth/cloud-platform'];
-
-    // Get an authenticated HTTP client
-    final client = await clientViaServiceAccount(credentials, scopes);
-
-    var _serverToken = client.credentials.accessToken.data;
-    return _serverToken;
-  }();
-  print(accessToken);
+  // var accessToken = await () async {
+  //   // final serviceAccountKey = await rootBundle.loadString('assets/your-service-account.json');
+  //   // final credentials = ServiceAccountCredentials.fromJson(json.decode(serviceAccountKey));
+  //   final credentials = ServiceAccountCredentials.fromJson(firebaseAdmin);
+  //
+  //   final scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+  //
+  //   // Get an authenticated HTTP client
+  //   final client = await clientViaServiceAccount(credentials, scopes);
+  //
+  //   var _serverToken = client.credentials.accessToken.data;
+  //   return _serverToken;
+  // }();
+  // print(accessToken);
 
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('assets/fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['assets/fonts'], license);
   });
-  await FlutterContacts.requestPermission(readonly: true);
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -68,12 +65,12 @@ Future<void> initializeHive() async {
 
   await Hive.initFlutter();
   await Hive.openBox<bool>(HiveBoxName.onboarding);
-  // await Hive.openBox<Chat>(HiveBoxName.chats);
   await Hive.openBox<Profile>(HiveBoxName.profiles);
-  await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
-  await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
   await Hive.openBox<FcmToken>(HiveBoxName.fcmToken);
+
+  // await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
+  // await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
 }
 
 class MyApp extends StatelessWidget {
