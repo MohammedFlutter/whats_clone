@@ -10,4 +10,5 @@ class HiveBoxName {
   static const chatProfiles = 'chat-profiles';
   static const profileCompletion = 'profile_completion';
   static const chatMessages = 'chat-messages';
+  static const fcmToken = 'fcm-token';
 }

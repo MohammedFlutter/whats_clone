@@ -13,7 +13,9 @@ import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/view/chats/chats_page.dart';
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
-  return ChatRepository(chatService: ref.watch(chatServiceProvider));
+  return ChatRepository(
+    chatService: ref.watch(chatServiceProvider),
+  );
 });
 final chatProfileRepositoryProvider = Provider<ChatProfileRepository>((ref) {
   return ChatProfileRepository(
@@ -33,13 +35,30 @@ final chatServiceProvider = Provider<ChatService>(
 
 final chatNotifierProvider =
     NotifierProvider<ChatNotifier, ChatState>(ChatNotifier.new);
-final chatProfileNotifierProvider =
+final chatProfilesNotifierProvider =
     StreamNotifierProvider<ChatProfileNotifier, List<ChatProfile>>(
         ChatProfileNotifier.new);
+final chatProfilesDisplayedProvider = Provider<AsyncValue<List<ChatProfile>>>(
+  (ref) {
+    AsyncValue<List<ChatProfile>> chatProfiles =
+        ref.watch(chatProfilesNotifierProvider);
+    return chatProfiles.map(
+      data: (data) => AsyncData(data.value
+          .where(
+            (chatProfile) =>
+                chatProfile.lastMessageTimestamp != null &&
+                chatProfile.lastMessage != null,
+          )
+          .toList()),
+      error: (error) => error,
+      loading: (loading) => loading,
+    );
+  },
+);
 
 final chatProfileSearchProvider =
     Provider.autoDispose<List<ChatProfile>>((ref) {
-  final chatProfiles = ref.watch(chatProfileNotifierProvider).value;
+  final chatProfiles = ref.watch(chatProfilesDisplayedProvider).value;
   if (chatProfiles == null || chatProfiles.isEmpty) return [];
   final query = ref.watch(chatQueryProvider.notifier).state;
   return chatProfiles
@@ -50,3 +69,9 @@ final chatProfileSearchProvider =
           )
       .toList();
 });
+
+final chatProfileProvider = AutoDisposeProviderFamily<ChatProfile?, String>(
+  (ref, arg) => ref
+      .read(chatProfilesNotifierProvider.notifier)
+      .getChatProfileByChatId(arg),
+);

@@ -5,6 +5,7 @@ import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
+import 'package:whats_clone/state/providers/app_initializer.dart';
 
 class SplashNotifier extends Notifier<AsyncValue<void>> {
   @override
@@ -37,6 +38,8 @@ class SplashNotifier extends Notifier<AsyncValue<void>> {
       final profileState = ref.read(profileNotifierProvider);
       final profileStatus = profileState.status;
       if (profileStatus == ProfileStatus.loaded) {
+        // Initialize notification service
+        await ref.read(appInitializerProvider.notifier).initialize();
         return RouteName.chats;
       }
       if (profileStatus == ProfileStatus.noProfile) {
@@ -49,6 +52,7 @@ class SplashNotifier extends Notifier<AsyncValue<void>> {
     } catch (e, st) {
       log.e(
         'Error initializing app: $e',
+        stackTrace: st
       );
       state = AsyncValue.error(e, st);
       return RouteName.login;

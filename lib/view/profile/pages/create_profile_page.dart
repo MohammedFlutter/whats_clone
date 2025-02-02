@@ -109,7 +109,8 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
 
     final avatarUrl =
         await ref.read(imagePickerProvider.notifier).uploadImage();
-    final phone = PhoneNumberUtil.instance.parse('$_dialCode${_phoneController.text}', _dialCode);
+    final phone = PhoneNumberUtil.instance
+        .parse('$_dialCode${_phoneController.text}', _dialCode);
 
     final profileState = ref.read(imagePickerProvider);
     // if false, the image is  uploaded successfully or not selected

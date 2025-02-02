@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:whats_clone/state/chat/services/chat_repository.dart';
 import 'package:whats_clone/state/message/models/chat_messages.dart';
 import 'package:whats_clone/state/message/models/message.dart';
-import 'package:whats_clone/state/message/repository/chat_messages_cache.dart';
-import 'package:whats_clone/state/message/repository/message_service.dart';
+import 'package:whats_clone/state/message/services/chat_messages_cache.dart';
+import 'package:whats_clone/state/message/services/message_service.dart';
 
 class MessageRepository {
   MessageRepository(
@@ -35,12 +35,17 @@ class MessageRepository {
     }
   }
 
-  Future<void> sendMessage({required Message message}) {
-    _chatRepository.updateLastMessage(
+  Future<void> sendMessage({required Message message}) async {
+    await _messageService.sendMessage(message: message);
+    await _chatRepository.incrementUnreadMessages(
+        chatId: message.chatId, senderId: message.senderId);
+    await Future.wait([
+      _chatRepository.updateLastMessage(
         chatId: message.chatId,
         lastMessage: message.content,
-    );
-
-    return _messageService.sendMessage(message: message);
+      ),
+      // _chatRepository.incrementUnreadMessages(
+      //     chatId: message.chatId, senderId: message.senderId),
+    ]);
   }
 }

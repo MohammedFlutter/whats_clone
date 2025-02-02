@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:whats_clone/core/routes/route_name.dart';
-import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
-import 'package:whats_clone/state/profile/models/profile_state.dart';
-import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/login/widgets/login_header.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
@@ -22,7 +18,18 @@ class LoginPage extends ConsumerWidget {
       authProvider,
       (_, authState) {
         if (authState.authResult == AuthResult.success) {
-          _handleSuccessfulLogin(context, ref, authState);
+          try {
+            ref.read(authProvider.notifier).handleSuccessfulLogin().then(
+              (value) {
+                if (context.mounted) context.goNamed(value);
+              },
+            );
+          } catch (e) {
+            AppSnakeBar.showErrorSnakeBar(
+                context: context,
+                message: Strings.errorLoadingProfile,
+                onRetry: ref.read(authProvider.notifier).handleSuccessfulLogin);
+          }
         } else if (authState.authResult == AuthResult.failed) {
           AppSnakeBar.showErrorSnakeBar(
               context: context, message: Strings.authenticationFailed);
@@ -38,38 +45,39 @@ class LoginPage extends ConsumerWidget {
     );
   }
 
-  Future<void> _handleSuccessfulLogin(
-    BuildContext context,
-    WidgetRef ref,
-    AuthState authState,
-  ) async {
-    final userId = authState.userId!;
-    await ref
-        .read(profileNotifierProvider.notifier)
-        .loadProfile(userId: userId);
-
-    if (!context.mounted) return;
-
-    final profileStatus = ref.read(profileNotifierProvider).status;
-
-    final String routeName;
-    if (profileStatus == ProfileStatus.loaded) {
-      routeName = RouteName.chats;
-    } else if (profileStatus == ProfileStatus.noProfile) {
-      routeName = RouteName.createProfile;
-    } else if (profileStatus == ProfileStatus.error) {
-      AppSnakeBar.showErrorSnakeBar(
-          context: context,
-          message: Strings.errorLoadingProfile,
-          onRetry: () => _handleSuccessfulLogin(context, ref, authState));
-      return;
-    } else {
-      log.e('Unknown profile status: $profileStatus');
-      return;
-    }
-
-    context.goNamed(routeName);
-  }
+// Future<void> _handleSuccessfulLogin(
+//   BuildContext context,
+//   WidgetRef ref,
+//   AuthState authState,
+// ) async {
+//   final userId = authState.userId!;
+//   await ref
+//       .read(profileNotifierProvider.notifier)
+//       .loadProfile(userId: userId);
+//
+//   if (!context.mounted) return;
+//
+//   final profileStatus = ref.read(profileNotifierProvider).status;
+//
+//   final String routeName;
+//   if (profileStatus == ProfileStatus.loaded) {
+//     routeName = RouteName.chats;
+//     await ref.read(appInitializerProvider.notifier).initialize();
+//   } else if (profileStatus == ProfileStatus.noProfile) {
+//     routeName = RouteName.createProfile;
+//   } else if (profileStatus == ProfileStatus.error) {
+//     AppSnakeBar.showErrorSnakeBar(
+//         context: context,
+//         message: Strings.errorLoadingProfile,
+//         onRetry: () => _handleSuccessfulLogin(context, ref, authState));
+//     return;
+//   } else {
+//     log.e('Unknown profile status: $profileStatus');
+//     return;
+//   }
+//
+//   context.goNamed(routeName);
+// }
 }
 
 class LoginPageBody extends ConsumerWidget {
@@ -86,8 +94,9 @@ class LoginPageBody extends ConsumerWidget {
         children: [
           const LoginHeader(),
           AppFillButton(
-              text: Strings.signInWithGoogle,
-              onPressed: authEvent.signInWithGoogle),
+            text: Strings.signInWithGoogle,
+            onPressed: authEvent.signInWithGoogle,
+          ),
         ],
       ),
     );

@@ -40,8 +40,4 @@ final profilesRepositoryProvider = Provider<ProfilesRepository>(
 );
 
 final profileNotifierProvider =
-    StateNotifierProvider<ProfileNotifier, ProfileState>(
-  (ref) => ProfileNotifier(
-    profileService: ref.watch(profileRepositoryProvider),
-  ),
-);
+    NotifierProvider<ProfileNotifier, ProfileState>(ProfileNotifier.new);

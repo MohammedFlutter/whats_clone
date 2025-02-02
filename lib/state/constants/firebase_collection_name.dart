@@ -9,6 +9,8 @@ class FirebaseCollectionName{
   static const chats='chats';
   static const chatsMessages='chats-messages';
   static const usersChats='users-chats';
+  static const usersPresence='users-presence';
+  static const fcmTokens='fcm-tokens';
   static const messages='messages';
 
 

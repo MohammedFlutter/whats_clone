@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/routes/route_params.dart';
+import 'package:whats_clone/core/theme/app_colors.dart';
+import 'package:whats_clone/core/theme/app_text_style.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/providers/time_ago_provider.dart';
@@ -18,7 +21,7 @@ class ChatsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chatProfilesAsync = ref.watch(chatProfileNotifierProvider);
+    final chatProfilesAsync = ref.watch(chatProfilesDisplayedProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text(Strings.chats)),
@@ -53,7 +56,8 @@ class ChatsPage extends ConsumerWidget {
 
   Widget _buildChatList(List<ChatProfile> chatProfiles, WidgetRef ref) {
     if (chatProfiles.isEmpty) {
-      return const Expanded(child: Center(child: Text(Strings.noChatAvailable)));
+      return const Expanded(
+          child: Center(child: Text(Strings.noChatAvailable)));
     }
     return Expanded(
       child: ListView.builder(
@@ -64,12 +68,33 @@ class ChatsPage extends ConsumerWidget {
               ref.watch(timeAgoProvider(chatProfile.lastMessageTimestamp!));
           return AppListTile(
             onPressed: () {
-              context.goNamed(RouteName.chatRoom, extra: chatProfile);
+              context.goNamed(
+                RouteName.chatRoom,
+                pathParameters: {RouteParams.chatId: chatProfile.chatId},
+              );
             },
             avatarUrl: chatProfile.avatarUrl,
             title: chatProfile.name,
             subtitle: chatProfile.lastMessage ?? "",
-            trailing: timeAgo,
+            trailing: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  timeAgo,
+                  style: AppTextStyles.metadata1
+                      .copyWith(color: AppColors.disable),
+                ),
+                const SizedBox(height: 2,),
+                if (chatProfile.unreadMessageCount > 0)
+                  Badge(
+                    backgroundColor: AppColors.badgeBackground,
+                    label: Text(
+                      chatProfile.unreadMessageCount.toString(),
+                    ),
+                  ),
+
+              ],
+            ),
           );
         },
       ),
