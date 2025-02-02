@@ -11,4 +11,6 @@ class FirebaseFieldName {
   static const phoneNumber  = 'phone_number';
   static const updatedAt = 'updated_at';
   static const createdAt = 'created_at';
+  static const unreadMessageCount = 'unreadMessageCount';
+
 }

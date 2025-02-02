@@ -15,6 +15,7 @@ class ChatProfile with _$ChatProfile {
     @HiveField(4) String? lastMessage,
     @HiveField(5) DateTime? lastMessageTimestamp,
     @HiveField(6) String? avatarUrl,
+    @HiveField(7) @Default(0) int unreadMessageCount ,
   }) = _ChatProfile;
 
   factory ChatProfile.fromJson(Map<String, dynamic> json) =>

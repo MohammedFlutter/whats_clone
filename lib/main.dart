@@ -69,8 +69,8 @@ Future<void> initializeHive() async {
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
   await Hive.openBox<FcmToken>(HiveBoxName.fcmToken);
 
-  // await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
-  // await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
+  await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
+  await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
 }
 
 class MyApp extends StatelessWidget {
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
               GoogleFonts.mulishTextTheme(AppTheme.lightTheme.textTheme)),
       darkTheme: AppTheme.darkTheme.copyWith(
           textTheme: GoogleFonts.mulishTextTheme(AppTheme.darkTheme.textTheme)),
-      themeMode: ThemeMode.dark,
+      // themeMode: ThemeMode.dark,
       routerConfig: appRouter,
     );
   }

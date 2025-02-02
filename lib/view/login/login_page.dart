@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:whats_clone/core/routes/app_router.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
@@ -20,11 +19,11 @@ class LoginPage extends ConsumerWidget {
       (_, authState) {
         if (authState.authResult == AuthResult.success) {
           try {
-            ref.read(authProvider.notifier).handleSuccessfulLogin().then((value){
-
-              if(context.mounted)context.goNamed(value);
-            } ,);
-
+            ref.read(authProvider.notifier).handleSuccessfulLogin().then(
+              (value) {
+                if (context.mounted) context.goNamed(value);
+              },
+            );
           } catch (e) {
             AppSnakeBar.showErrorSnakeBar(
                 context: context,

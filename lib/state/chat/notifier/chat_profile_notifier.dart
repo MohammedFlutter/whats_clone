@@ -11,22 +11,23 @@ class ChatProfileNotifier extends StreamNotifier<List<ChatProfile>> {
     return ref
         .watch(chatProfileRepositoryProvider)
         .getChatProfiles(userId: userId)
-        .map(
-      (chatProfiles) {
-        return chatProfiles
-            .where(
-              (chat) =>
-                  chat.lastMessage != null && chat.lastMessageTimestamp != null,
-            )
-            .toList();
-      },
-    );
+      //   .map(
+      // (chatProfiles) {
+      //   return chatProfiles
+      //       .where(
+      //         (chat) =>
+      //             chat.lastMessage != null && chat.lastMessageTimestamp != null,
+      //       )
+      //       .toList();
+      // },
+    // )
+    ;
   }
 
-  ChatProfile? getChatProfileByProfileId(String profileId) =>
+  ChatProfile? getChatProfileByChatId(String chatId) =>
       state.asData?.value
           .where(
-            (element) => element.id == profileId,
+            (element) => element.chatId == chatId,
           )
           .firstOrNull;
 }

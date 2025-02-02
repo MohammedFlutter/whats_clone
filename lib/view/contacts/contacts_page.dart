@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/routes/route_params.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/providers/contacts_provider.dart';
@@ -129,7 +130,9 @@ class _ContactPageState extends ConsumerState<ContactPage> {
         .read(chatNotifierProvider.notifier)
         .createChat(antherUserId: contact.userId!);
     if (!mounted || chatProfile == null) return;
-    context.goNamed(RouteName.chatRoom, extra: chatProfile);
+    context.goNamed(RouteName.chatRoom, pathParameters: {
+      RouteParams.chatId: chatProfile.chatId,
+    },);
   }
 
   void _handleUnregisteredContact(AppContact contact) {

@@ -14,8 +14,9 @@ final userPresenceProvider = StreamProviderFamily<UserPresence?, String>(
 final subtitleChatRoomProvider = ProviderFamily<String, String>(
   (ref, arg) {
     final userPresence = ref.watch(userPresenceProvider(arg)).value;
-    if (userPresence == null || userPresence.lastSeen == null) return '';
+    if (userPresence == null ) return '';
     if (userPresence.isOnline ?? false) return Strings.online;
+    if( userPresence.lastSeen == null)return '';
     final timeAgo = ref.watch(timeAgoProvider(userPresence.lastSeen!));
     return timeAgo;
   },

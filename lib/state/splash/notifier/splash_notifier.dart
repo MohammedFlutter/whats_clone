@@ -52,6 +52,7 @@ class SplashNotifier extends Notifier<AsyncValue<void>> {
     } catch (e, st) {
       log.e(
         'Error initializing app: $e',
+        stackTrace: st
       );
       state = AsyncValue.error(e, st);
       return RouteName.login;

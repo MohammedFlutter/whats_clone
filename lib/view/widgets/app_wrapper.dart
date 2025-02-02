@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/user_presence/provider/user_presence_provider.dart';
 
@@ -34,7 +31,6 @@ class _AppWrapperState extends ConsumerState<AppWrapper>
     final userId = ref.read(authProvider).userId;
     if (userId == null) return;
 
-
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
@@ -42,8 +38,6 @@ class _AppWrapperState extends ConsumerState<AppWrapper>
     } else if (state == AppLifecycleState.resumed) {
       userPresenceService.updateUserPresence(userId, isOnline: true);
     }
-
-    FirebaseDatabase.instance.goOnline();
   }
 
   @override

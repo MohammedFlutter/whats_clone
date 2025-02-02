@@ -4,9 +4,9 @@ import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
 import 'package:whats_clone/state/message/models/chat_messages.dart';
 import 'package:whats_clone/state/message/notifier/message_notifier.dart';
-import 'package:whats_clone/state/message/repository/chat_messages_cache.dart';
-import 'package:whats_clone/state/message/repository/message_repository.dart';
-import 'package:whats_clone/state/message/repository/message_service.dart';
+import 'package:whats_clone/state/message/services/chat_messages_cache.dart';
+import 'package:whats_clone/state/message/services/message_repository.dart';
+import 'package:whats_clone/state/message/services/message_service.dart';
 
 final chatMessagesCacheProvider = Provider<ChatMessagesCache>((ref) {
   final chatMessagesBox = Hive.box<ChatMessages>(HiveBoxName.chatMessages);

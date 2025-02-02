@@ -3,18 +3,27 @@ import 'package:rxdart/rxdart.dart';
 import 'package:whats_clone/core/utils/extensions/database_reference_extension.dart';
 import 'package:whats_clone/state/chat/models/chat.dart';
 import 'package:whats_clone/state/constants/firebase_collection_name.dart';
+import 'package:whats_clone/state/constants/firebase_field_name.dart';
 
 abstract class ChatService {
   Future<Chat> createChat({required String userId1, required String userId2});
 
+  Future<Chat?> getChat({required String chatId});
+
   Stream<List<Chat>> getChatsByUserId({required String userId});
 
-  Future<void> updateChat({
+  Future<void> updateLastMessage({
     required String chatId,
     required String lastMessage,
   });
 
   Future<void> deleteChat({required String chatId});
+
+  Future<void> updateUnreadMessageCount({
+    required String chatId,
+    required String userId,
+    int unreadMessageCount = 0,
+  });
 }
 
 class ChatServiceFirebase implements ChatService {
@@ -105,7 +114,7 @@ class ChatServiceFirebase implements ChatService {
   }
 
   @override
-  Future<void> updateChat({
+  Future<void> updateLastMessage({
     required String chatId,
     required String lastMessage,
   }) {
@@ -118,5 +127,33 @@ class ChatServiceFirebase implements ChatService {
         .child(FirebaseCollectionName.chats)
         .child(chatId)
         .update(update);
+  }
+
+  @override
+  Future<void> updateUnreadMessageCount({
+    required String chatId,
+    required String userId,
+    int unreadMessageCount = 0,
+  }) {
+    final update = <String, dynamic>{userId: unreadMessageCount};
+
+    return _databaseRef
+        .child(
+            '${FirebaseCollectionName.chats}/$chatId/${FirebaseFieldName.unreadMessageCount}')
+        .update(update);
+  }
+
+  @override
+  Future<Chat?> getChat({required String chatId}) async {
+    final snapshot = await _databaseRef
+        .child('${FirebaseCollectionName.chats}/$chatId')
+        .get();
+    final value = snapshot.value;
+
+    if (value is Map) {
+      final json = value.cast<String, dynamic>();
+      return Chat.fromJson(json);
+    }
+    return null;
   }
 }

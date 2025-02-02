@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:whats_clone/core/secrets.dart';
@@ -69,7 +71,7 @@ class SendNotification {
 
     return await http.post(
       url,
-      body: body,
+      body: jsonEncode(body),
       headers: headers,
     );
   }

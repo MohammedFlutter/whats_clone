@@ -72,6 +72,7 @@ class ChatProfileRepository {
         chatId: chat.chatId,
         lastMessage: chat.lastMessage,
         lastMessageTimestamp: chat.lastMessageTimestamp,
+        unreadMessageCount: chat.unreadMessageCount[userId]??0,
       );
     })
         .whereType<ChatProfile>()

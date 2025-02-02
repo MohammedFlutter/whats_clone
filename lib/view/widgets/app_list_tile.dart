@@ -18,7 +18,7 @@ class AppListTile extends StatelessWidget {
   final String? avatarUrl;
   final String title;
   final String? subtitle;
-  final String? trailing;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +57,8 @@ class AppListTile extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                if (trailing != null)
-                  Text(
-                    trailing!,
-                    style: AppTextStyles.metadata1
-                        .copyWith(color: AppColors.disable),
-                  ),
+                trailing ??const SizedBox(),
+
               ],
             ),
           ),
