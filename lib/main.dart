@@ -33,20 +33,6 @@ Future<void> main() async {
     anonKey: supabaseApikey,
   );
 
-  // var accessToken = await () async {
-  //   // final serviceAccountKey = await rootBundle.loadString('assets/your-service-account.json');
-  //   // final credentials = ServiceAccountCredentials.fromJson(json.decode(serviceAccountKey));
-  //   final credentials = ServiceAccountCredentials.fromJson(firebaseAdmin);
-  //
-  //   final scopes = ['https://www.googleapis.com/auth/cloud-platform'];
-  //
-  //   // Get an authenticated HTTP client
-  //   final client = await clientViaServiceAccount(credentials, scopes);
-  //
-  //   var _serverToken = client.credentials.accessToken.data;
-  //   return _serverToken;
-  // }();
-  // print(accessToken);
 
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('assets/fonts/OFL.txt');
@@ -65,6 +51,15 @@ Future<void> initializeHive() async {
 
   await Hive.initFlutter();
   await Hive.openBox<bool>(HiveBoxName.onboarding);
+  await Hive.openBox<Profile>(HiveBoxName.profiles);
+  await Hive.openBox<bool>(HiveBoxName.profileCompletion);
+  await Hive.openBox<FcmToken>(HiveBoxName.fcmToken);
+
+  await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
+  await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
+}
+
+Future<void> openHiveBoxes() async {
   await Hive.openBox<Profile>(HiveBoxName.profiles);
   await Hive.openBox<bool>(HiveBoxName.profileCompletion);
   await Hive.openBox<FcmToken>(HiveBoxName.fcmToken);

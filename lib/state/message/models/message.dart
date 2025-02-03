@@ -26,7 +26,6 @@ class Message with _$Message {
 
   // Convert DateTime to Firestore Timestamp for sending data
   static DateTime? _fromJson(dynamic timestamp) {
-
     if (timestamp is int) {
       return DateTime.fromMillisecondsSinceEpoch(timestamp);
     }

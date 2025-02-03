@@ -1,9 +1,13 @@
+import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/utils/logger.dart';
+import 'package:whats_clone/main.dart';
 import 'package:whats_clone/state/auth/backend/authenticator.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
+import 'package:whats_clone/state/constants/hive_box_name.dart';
+import 'package:whats_clone/state/notification/providers/fcm_token_provider.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/state/providers/app_initializer.dart';
@@ -11,7 +15,6 @@ import 'package:whats_clone/state/providers/app_initializer.dart';
 final authProvider =
     NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
-// @Riverpod(keepAlive: true,)
 class AuthNotifier extends Notifier<AuthState> {
   final Authenticator _authenticator = Authenticator();
 
@@ -64,5 +67,25 @@ class AuthNotifier extends Notifier<AuthState> {
       log.e('Unknown profile status: $profileStatus');
       return '';
     }
+  }
+
+  Future<void> logout() async {
+    var userId = state.userId;
+    if (userId == null) return;
+    await ref.read(fcmTokenRepositoryProvider).deleteToken(userId);
+    await _authenticator.logout();
+    await _cleanStorage();
+  }
+
+  Future<void> _cleanStorage() async {
+    await Future.wait([
+      Hive.deleteBoxFromDisk(HiveBoxName.chats),
+      Hive.deleteBoxFromDisk(HiveBoxName.chatProfiles),
+      Hive.deleteBoxFromDisk(HiveBoxName.chatMessages),
+      Hive.deleteBoxFromDisk(HiveBoxName.fcmToken),
+      Hive.deleteBoxFromDisk(HiveBoxName.profiles),
+      Hive.deleteBoxFromDisk(HiveBoxName.profileCompletion),
+    ]);
+    return openHiveBoxes();
   }
 }

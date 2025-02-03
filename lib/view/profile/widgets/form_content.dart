@@ -6,23 +6,23 @@ import 'package:whats_clone/view/profile/widgets/profile_picture.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
 
 class FormContent extends StatelessWidget {
-  const FormContent(
-      {super.key,
-      required this.nameController,
-      required this.bioController,
-      required this.phoneController,
-      required this.onDialCodeChanged,
-      required this.onCreateProfile,
-      required this.dialCode,
-      required this.onPickImage});
+  const FormContent({
+    super.key,
+    required this.nameController,
+    required this.bioController,
+    required this.phoneController,
+    required this.onDialCodeChanged,
+    required this.onSave,
+    required this.dialCode,
+  });
 
   final TextEditingController nameController;
   final TextEditingController bioController;
   final TextEditingController phoneController;
   final void Function(String code) onDialCodeChanged;
   final String dialCode;
-  final VoidCallback onCreateProfile;
-  final VoidCallback onPickImage;
+  final VoidCallback onSave;
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class FormContent extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Spacer(),
-          AppFillButton(text: Strings.save, onPressed: onCreateProfile),
+          AppFillButton(text: Strings.save, onPressed: onSave),
           const SizedBox(height: 32),
         ],
       ),
@@ -79,6 +79,7 @@ class FormContent extends StatelessWidget {
   }
 
   String? _phoneNumberValidator(String? phone) {
+    //todo validation dont work
     if (phone == null || phone.isEmpty) {
       return Strings.phoneNumberIsRequired;
     }

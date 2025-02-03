@@ -34,7 +34,7 @@ class Strings {
   static const profilePhoto = 'Profile photo';
   static const camera = 'Camera';
   static const gallery = 'Gallery';
-  static const errorLoadingProfile= 'Error loading profile';
+  static const errorLoadingProfile = 'Error loading profile';
 
   static const contacts = 'Contacts';
   static const chats = 'Chats';
@@ -44,11 +44,13 @@ class Strings {
   static const contactOnApp = 'Contacts On $appTitle';
   static const searchContacts = 'Search contacts...';
   static const inviteToApp = 'Invite to ${Strings.appTitle}';
+
   // chats
   static const searchChat = 'Search chat...';
   static const noChatAvailable = 'No chats available.';
   static const online = 'Online';
 
-
-
+  //more
+  static const logout = 'Logout';
+  static const logoutDescription = 'Are you sure you want to logout?';
 }

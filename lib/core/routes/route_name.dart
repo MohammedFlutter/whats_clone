@@ -9,6 +9,7 @@ class RouteName{
   static const splash='splash';
   static const login='login';
   static const createProfile = 'create-profile';
+  static const updateProfile = 'update-profile';
   static const chats = 'chats';
   static const chatRoom = 'chat-room';
   static const contacts = 'contacts';

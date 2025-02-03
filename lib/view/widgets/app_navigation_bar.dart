@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/theme/app_colors.dart';
 import 'package:whats_clone/view/constants/icons_assets.dart';
 import 'package:whats_clone/view/constants/strings.dart';
@@ -46,6 +47,28 @@ class AppNavigationBar extends StatefulWidget {
 
 class _AppNavigationBarState extends State<AppNavigationBar> {
   int _selectedIndex = 1;
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateSelectedIndex();
+  }
+
+  void _updateSelectedIndex() {
+    final String location = GoRouter.of(context).state!.path!;
+
+    if (location.startsWith('/${RouteName.contacts}')) {
+      _selectedIndex = 0;
+    } else if (location.startsWith('/${RouteName.chats}')) {
+      _selectedIndex = 1;
+    } else if (location.startsWith('/${RouteName.more}')) {
+      _selectedIndex = 2;
+    }
+
+    setState(() {}); // Ensure UI updates
+  }
+
 
   @override
   Widget build(BuildContext context) {
