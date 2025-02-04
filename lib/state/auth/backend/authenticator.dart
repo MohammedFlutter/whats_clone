@@ -32,7 +32,7 @@ class Authenticator {
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> logout() async {
     await GoogleSignIn().signOut();
     await FirebaseAuth.instance.signOut();
   }

@@ -1,4 +1,4 @@
-import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:fast_contacts/fast_contacts.dart';
 import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/services/contact_service.dart';

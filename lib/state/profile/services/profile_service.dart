@@ -57,24 +57,26 @@ class ProfileServiceFirebase implements ProfileService {
   }) async {
     if (values.isEmpty) return [];
 
-    List<Profile> profiles = [];
-
+    // Create chunks of 30 values, 30 it is max of firebase
+    final chunks = <List<String>>[];
     for (var i = 0; i < values.length; i += 30) {
-      final chunk = values.sublist(
+      chunks.add(values.sublist(
         i,
         i + 30 > values.length ? values.length : i + 30,
-      );
-
-      final querySnapshot = await _profilesCollection
-          .where(firebaseFieldName, whereIn: chunk)
-          .get();
-
-      profiles.addAll(querySnapshot.docs
-          .map((doc) => Profile.fromJson(doc.data()))
-          .toList());
+      ));
     }
 
-    return profiles;
+    // Run all queries in parallel
+    final querySnapshots = await Future.wait(
+      chunks.map((chunk) =>
+          _profilesCollection.where(firebaseFieldName, whereIn: chunk).get()),
+    );
+
+    // Combine all results
+    return querySnapshots
+        .expand((snapshot) =>
+            snapshot.docs.map((doc) => Profile.fromJson(doc.data())))
+        .toList();
   }
 
   @override
@@ -89,7 +91,10 @@ class ProfileServiceFirebase implements ProfileService {
       throw Exception("Phone number already exists.");
     }
 
-    await _profilesCollection.add(profile.toJson());
+    final json = profile.toJson()
+      ..addAll({'created_at': FieldValue.serverTimestamp()});
+
+    await _profilesCollection.add(json);
   }
 
   @override
@@ -105,19 +110,27 @@ class ProfileServiceFirebase implements ProfileService {
 
     final docRef = querySnapshot.docs.first.reference;
 
-    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber);
+    final isPhoneUnique = await _isPhoneUnique(
+        phone: profile.phoneNumber, userId: profile.userId);
     if (!isPhoneUnique) {
       throw Exception("Phone number already exists.");
     }
-    await docRef.update(profile.toJson());
+    final json = profile.toJson()
+      ..addAll({'updated_at': FieldValue.serverTimestamp()});
+
+    await _profilesCollection.doc(docRef.id).update(json);
   }
 
-  Future<bool> _isPhoneUnique({required String phone}) async {
+  Future<bool> _isPhoneUnique({required String phone, String? userId}) async {
     final querySnapshot = await _profilesCollection
         .where(FirebaseFieldName.phoneNumber, isEqualTo: phone)
-        .limit(1)
+        .limit(2)
         .get();
+    if (querySnapshot.docs.isEmpty) return true;
+    if (userId == null || querySnapshot.docs.length >= 2) return false;
 
-    return querySnapshot.docs.isEmpty;
+    final profile = Profile.fromJson(querySnapshot.docs.first.data());
+
+    return profile.userId == userId;
   }
 }

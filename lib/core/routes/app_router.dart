@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/routes/route_params.dart';
+import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/view/chats/chat_room_page.dart';
 import 'package:whats_clone/view/chats/chats_page.dart';
 import 'package:whats_clone/view/contacts/contacts_page.dart';
 import 'package:whats_clone/view/login/login_page.dart';
+import 'package:whats_clone/view/more/more_page.dart';
 import 'package:whats_clone/view/onboarding/onboarding_page.dart';
 import 'package:whats_clone/view/profile/pages/create_profile_page.dart';
+import 'package:whats_clone/view/profile/pages/update_profile_page.dart';
 import 'package:whats_clone/view/splash/splash_page.dart';
 import 'package:whats_clone/view/widgets/app_wrapper.dart';
 import 'package:whats_clone/view/widgets/loading_wrapper.dart';
@@ -81,7 +84,18 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/${RouteName.more}',
               name: RouteName.more,
-              builder: (context, state) => const Text('more'),
+              builder: (context, state) => const MorePage(),
+              routes: [
+                GoRoute(
+                  path: RouteName.updateProfile,
+                  name: RouteName.updateProfile,
+                  builder: (context, state) {
+
+                    final profile = state.extra as Profile;
+                    return LoadingWrapper(child: UpdateProfilePage(profile: profile));
+                  },
+                ),
+              ],
             )
           ],
         ),

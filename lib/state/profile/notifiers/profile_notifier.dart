@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_clone/core/utils/logger.dart';
+import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/state/providers/app_initializer.dart';
+
 
 class ProfileNotifier extends Notifier<ProfileState> {
   @override
@@ -28,8 +30,8 @@ class ProfileNotifier extends Notifier<ProfileState> {
         profile: profile,
         status: ProfileStatus.loaded,
       );
-    } catch (e) {
-      log.e(e);
+    } catch (e, st) {
+      log.e(e, stackTrace: st);
       state = state.copyWith(
         errorMessage: e.toString(),
         status: ProfileStatus.error,
@@ -60,9 +62,13 @@ class ProfileNotifier extends Notifier<ProfileState> {
   /// Update an existing profile.
   Future<void> updateProfile(Profile profile) async {
     state = state.copyWith(status: ProfileStatus.loading);
+
     try {
       await ref.watch(profileServiceProvider).updateProfile(profile: profile);
-
+      final oldImage = state.profile?.avatarUrl;
+      if (oldImage != null && profile.avatarUrl != oldImage) {
+        ref.read(imageUploadServiceProvider).deleteImage(oldImage);
+      }
       state = state.copyWith(
         profile: profile,
         status: ProfileStatus.updated,
