@@ -1,7 +1,9 @@
-import 'package:flutter_contacts/flutter_contacts.dart';
+// import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/notification/providers/notification_provider.dart';
+import 'package:whats_clone/state/providers/permission_provider.dart';
 import 'package:whats_clone/state/user_presence/provider/user_presence_provider.dart';
 
 /// initialize mandatory functions after user register
@@ -21,7 +23,9 @@ class AppInitializer extends Notifier<bool> {
 
     await Future.wait([
       ref.read(notificationServiceProvider).initialize(),
-      FlutterContacts.requestPermission(readonly: true),
+      ref
+          .read(permissionNotifierProvider(Permission.contacts).notifier)
+          .handlePermissionStatus(onPermissionGranted: () {}),
       _initializeHive(),
       ref.read(userPresenceServiceProvider).autoUserPresence(userId),
     ]);

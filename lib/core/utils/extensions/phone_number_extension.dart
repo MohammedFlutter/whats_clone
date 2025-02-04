@@ -12,7 +12,7 @@ extension PhoneNumberUtilExtension on PhoneNumberUtil{
     try {
       return parse(numberToParse, defaultRegion);
     } catch (e) {
-      return PhoneNumber();
+      return null;
     }
   }
 

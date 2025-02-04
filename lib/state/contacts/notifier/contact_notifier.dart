@@ -20,22 +20,25 @@ class ContactNotifier extends AsyncNotifier<List<AppContact>> {
         onPermissionGranted: () => isGranted = true,
       );
     }
-    // if(!isGranted){return Future.value();}
     final contactServices = ref.watch(contactRepositoryProvider);
     final contacts = await contactServices.appContacts;
     contacts.removeWhere(
-      (contact) => contact.phoneNumbers
-          .contains(ref.read(profileNotifierProvider).profile?.phoneNumber),
+      (contact) =>
+          contact.userId == ref.read(profileNotifierProvider).profile?.userId,
     );
     return contacts;
   }
 
   Future<void> refreshContacts() async {
-    state = const AsyncValue.loading();
+    // state = const AsyncValue.loading();
     try {
       final contactServices = ref.watch(contactRepositoryProvider);
 
       final contacts = await contactServices.appContacts;
+      contacts.removeWhere(
+            (contact) =>
+        contact.userId == ref.read(profileNotifierProvider).profile?.userId,
+      );
       state = AsyncValue.data(contacts);
     } catch (error, stackTrace) {
       log.e(error);

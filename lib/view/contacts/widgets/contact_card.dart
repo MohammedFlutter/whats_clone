@@ -39,9 +39,10 @@ class ContactCard extends StatelessWidget {
                 ),
                 // if (contact.isRegistered && contact.bio != null)
                 Text(
-                  contact.phoneNumbers.join(', '),
+                  contact.phoneNumbers.sublist(0,2).join(', '),
                   style: AppTextStyles.metadata1
                       .copyWith(color: AppColors.disable),
+                  overflow: TextOverflow.ellipsis,
                 )
               ],
             )

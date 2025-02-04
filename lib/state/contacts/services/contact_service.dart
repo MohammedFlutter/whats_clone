@@ -1,5 +1,6 @@
 import 'package:dlibphonenumber/dlibphonenumber.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:fast_contacts/fast_contacts.dart';
+
 import 'package:whats_clone/core/utils/extensions/phone_number_extension.dart';
 
 class ContactService {
@@ -10,12 +11,12 @@ class ContactService {
   ContactService({required this.defaultRegionCode});
 
   Future<List<Contact>> getContacts() async {
-
-
-    _cachedContacts ??= await FlutterContacts.getContacts(
-      deduplicateProperties: true,
-      withProperties: true,
-    );
+    if (_cachedContacts != null) return _cachedContacts!;
+    _cachedContacts = await FastContacts.getAllContacts(fields: [
+      ContactField.displayName,
+      ContactField.phoneNumbers,
+      ContactField.phoneLabels,
+    ]);
     _cachedContacts?.removeWhere((contact) => contact.phones.isEmpty);
     return _cachedContacts!;
   }
@@ -25,7 +26,6 @@ class ContactService {
       final contacts = await getContacts();
       final phones = contacts
           .expand((contact) => contact.phones)
-          .where((phone) => phone.label == PhoneLabel.mobile)
           .toList();
       _cachedPhones = formatPhoneNumbers(phones);
     }
@@ -42,5 +42,6 @@ class ContactService {
       })
       .where((e) => e != null)
       .cast<String>()
+      .toSet()
       .toList();
 }

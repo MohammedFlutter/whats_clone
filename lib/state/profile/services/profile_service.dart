@@ -57,24 +57,26 @@ class ProfileServiceFirebase implements ProfileService {
   }) async {
     if (values.isEmpty) return [];
 
-    List<Profile> profiles = [];
-
+    // Create chunks of 30 values, 30 it is max of firebase
+    final chunks = <List<String>>[];
     for (var i = 0; i < values.length; i += 30) {
-      final chunk = values.sublist(
+      chunks.add(values.sublist(
         i,
         i + 30 > values.length ? values.length : i + 30,
-      );
-
-      final querySnapshot = await _profilesCollection
-          .where(firebaseFieldName, whereIn: chunk)
-          .get();
-
-      profiles.addAll(querySnapshot.docs
-          .map((doc) => Profile.fromJson(doc.data()))
-          .toList());
+      ));
     }
 
-    return profiles;
+    // Run all queries in parallel
+    final querySnapshots = await Future.wait(
+      chunks.map((chunk) =>
+          _profilesCollection.where(firebaseFieldName, whereIn: chunk).get()),
+    );
+
+    // Combine all results
+    return querySnapshots
+        .expand((snapshot) =>
+            snapshot.docs.map((doc) => Profile.fromJson(doc.data())))
+        .toList();
   }
 
   @override
@@ -108,7 +110,8 @@ class ProfileServiceFirebase implements ProfileService {
 
     final docRef = querySnapshot.docs.first.reference;
 
-    final isPhoneUnique = await _isPhoneUnique(phone: profile.phoneNumber,userId: profile.userId);
+    final isPhoneUnique = await _isPhoneUnique(
+        phone: profile.phoneNumber, userId: profile.userId);
     if (!isPhoneUnique) {
       throw Exception("Phone number already exists.");
     }
@@ -124,10 +127,10 @@ class ProfileServiceFirebase implements ProfileService {
         .limit(2)
         .get();
     if (querySnapshot.docs.isEmpty) return true;
-    if (userId==null||querySnapshot.docs.length >= 2) return false;
+    if (userId == null || querySnapshot.docs.length >= 2) return false;
 
-    final profile= Profile.fromJson(querySnapshot.docs.first.data());
+    final profile = Profile.fromJson(querySnapshot.docs.first.data());
 
-    return profile.userId ==userId;
+    return profile.userId == userId;
   }
 }

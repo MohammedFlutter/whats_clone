@@ -33,7 +33,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   #contact and phone number
-  flutter_contacts: ^1.1.9+2
+  fast_contacts: ^4.0.0
   country_code_picker_plus: ^0.0.9
   dlibphonenumber: ^1.1.29
 

@@ -1,5 +1,6 @@
 import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:flutter/material.dart';
+import 'package:whats_clone/core/utils/extensions/phone_number_extension.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/profile/widgets/phone_number_input.dart';
 import 'package:whats_clone/view/profile/widgets/profile_picture.dart';
@@ -22,7 +23,6 @@ class FormContent extends StatelessWidget {
   final void Function(String code) onDialCodeChanged;
   final String dialCode;
   final VoidCallback onSave;
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +84,12 @@ class FormContent extends StatelessWidget {
       return Strings.phoneNumberIsRequired;
     }
     final phoneNumberUtil = PhoneNumberUtil.instance;
+    final regionCode =
+        phoneNumberUtil.getRegionCodeForCountryCode(int.parse(dialCode));
 
-    if (!phoneNumberUtil.isViablePhoneNumber(phone)) {
+    final phoneNumber = phoneNumberUtil.tryParsePhoneNumber(
+        numberToParse: phone, defaultRegion: regionCode);
+    if (phoneNumber == null || !phoneNumberUtil.isValidNumber(phoneNumber)) {
       return Strings.invalidPhoneNumber;
     }
     return null;

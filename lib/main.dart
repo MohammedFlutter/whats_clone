@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whats_clone/core/routes/app_router.dart';
@@ -33,7 +32,6 @@ Future<void> main() async {
     anonKey: supabaseApikey,
   );
 
-
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('assets/fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['assets/fonts'], license);
@@ -51,12 +49,13 @@ Future<void> initializeHive() async {
 
   await Hive.initFlutter();
   await Hive.openBox<bool>(HiveBoxName.onboarding);
-  await Hive.openBox<Profile>(HiveBoxName.profiles);
-  await Hive.openBox<bool>(HiveBoxName.profileCompletion);
-  await Hive.openBox<FcmToken>(HiveBoxName.fcmToken);
-
-  await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
-  await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
+  await openHiveBoxes();
+  // await Hive.openBox<Profile>(HiveBoxName.profiles);
+  // await Hive.openBox<bool>(HiveBoxName.profileCompletion);
+  // await Hive.openBox<FcmToken>(HiveBoxName.fcmToken);
+  //
+  // await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
+  // await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
 }
 
 Future<void> openHiveBoxes() async {
@@ -73,14 +72,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //todo test
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme.copyWith(
-          textTheme:
-              GoogleFonts.mulishTextTheme(AppTheme.lightTheme.textTheme)),
+        textTheme: AppTheme.lightTheme.textTheme.apply(fontFamily: 'Mulish'),
+      ),
       darkTheme: AppTheme.darkTheme.copyWith(
-          textTheme: GoogleFonts.mulishTextTheme(AppTheme.darkTheme.textTheme)),
-      // themeMode: ThemeMode.dark,
+        textTheme: AppTheme.darkTheme.textTheme.apply(fontFamily: 'Mulish'),
+      ),
+
+      themeMode: ThemeMode.system,
       routerConfig: appRouter,
     );
   }
