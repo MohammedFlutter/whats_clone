@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show immutable;
 class HiveBoxName {
   const HiveBoxName._();
 
+  static const themeMode = 'theme-mode';
   static const chats = 'chats';
   static const onboarding = 'onboarding';
   static const profiles = 'profile';

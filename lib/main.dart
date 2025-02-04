@@ -15,6 +15,7 @@ import 'package:whats_clone/state/message/models/chat_messages.dart';
 import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/notification/model/fcm_token.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
+import 'package:whats_clone/state/providers/theme_provider.dart';
 
 import 'firebase_options.dart';
 
@@ -48,14 +49,9 @@ Future<void> initializeHive() async {
   Hive.registerAdapter(FcmTokenAdapter());
 
   await Hive.initFlutter();
+  await Hive.openBox<bool>(HiveBoxName.themeMode);
   await Hive.openBox<bool>(HiveBoxName.onboarding);
   await openHiveBoxes();
-  // await Hive.openBox<Profile>(HiveBoxName.profiles);
-  // await Hive.openBox<bool>(HiveBoxName.profileCompletion);
-  // await Hive.openBox<FcmToken>(HiveBoxName.fcmToken);
-  //
-  // await Hive.openBox<ChatProfile>(HiveBoxName.chatProfiles);
-  // await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
 }
 
 Future<void> openHiveBoxes() async {
@@ -67,12 +63,12 @@ Future<void> openHiveBoxes() async {
   await Hive.openBox<ChatMessages>(HiveBoxName.chatMessages);
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    //todo test
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme.copyWith(
@@ -81,8 +77,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme.copyWith(
         textTheme: AppTheme.darkTheme.textTheme.apply(fontFamily: 'Mulish'),
       ),
-
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       routerConfig: appRouter,
     );
   }

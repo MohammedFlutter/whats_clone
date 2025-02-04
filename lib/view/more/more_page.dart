@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
+import 'package:whats_clone/state/providers/theme_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/more/widgets/more_card.dart';
 import 'package:whats_clone/view/widgets/app_alert_dialog.dart';
@@ -44,6 +45,8 @@ class MorePage extends ConsumerWidget {
                     const SizedBox(
                       height: 24,
                     ),
+                    buildSystemModeCard(ref),
+                    buildLightDarkCard(ref),
                     buildLogoutCard(context, ref),
                   ],
                 ),
@@ -51,6 +54,28 @@ class MorePage extends ConsumerWidget {
             ),
     );
   }
+  Widget buildSystemModeCard(WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
+
+    return MoreCard(
+      icon: Icons.settings_brightness,
+      title: themeMode == ThemeMode.system ? 'System Mode: ON' : 'System Mode: OFF',
+      onPressed: () => ref.read(themeProvider.notifier).toggleSystemMode(),
+    );
+  }
+
+  Widget buildLightDarkCard(WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
+
+    return MoreCard(
+      icon: themeMode == ThemeMode.dark ? Icons.nightlight_round : Icons.wb_sunny,
+      title: themeMode == ThemeMode.dark ? 'Dark Mode' : 'Light Mode',
+      onPressed: themeMode == ThemeMode.system
+          ? null
+          : () => ref.read(themeProvider.notifier).toggleLightDarkMode(),
+    );
+  }
+
 
   MoreCard buildLogoutCard(BuildContext context, WidgetRef ref) {
     return MoreCard(
