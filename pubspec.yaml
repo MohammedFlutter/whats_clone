@@ -54,6 +54,7 @@ dependencies:
 
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,6 +68,8 @@ dev_dependencies:
   json_serializable: ^6.9.0
   riverpod_generator: ^2.6.3
 
+  icons_launcher: ^3.0.0
+  flutter_native_splash: ^2.4.4
 
 flutter:
 

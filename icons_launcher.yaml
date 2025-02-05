@@ -1,0 +1,9 @@
+#  dart run icons_launcher:create --path icons_launcher.yaml
+
+icons_launcher:
+  image_path: "assets/images/logo.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true

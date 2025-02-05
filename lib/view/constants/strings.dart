@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show immutable;
 class Strings {
   const Strings._();
 
-  static const appTitle = 'Chat Me';
+  static const appTitle = 'Chat Arb';
 
   //Onboarding Page
   static const onboardingTitle =
