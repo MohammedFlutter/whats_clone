@@ -158,9 +158,9 @@ lib/
 │   ├── others/        # other features
 │   └── providers/     # general providers
 └── view/
-    ├── auth/          # Authentication screens
-    ├── chats/         # Chat-related screens
-    ├── profile/       # Profile management screens
+    ├── login/          # login page
+    ├── chats/         # Chat-related pages
+    ├── profile/       # Profile management pages
     ├── others/        # other screens
     └── widgets/       # Shared widgets and components
 ```
