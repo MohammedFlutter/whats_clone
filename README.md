@@ -165,16 +165,6 @@ lib/
     └── widgets/       # Shared widgets and components
 ```
 
-## Environment Setup
-
-### Android
-- Minimum SDK version: 21
-- Target SDK version: 33
-- Compile SDK version: 33
-
-### iOS
-- Minimum iOS version: 11.0
-- Swift version: 5.0
 
 ## Contributing
 
