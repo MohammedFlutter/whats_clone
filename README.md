@@ -110,7 +110,7 @@ UI Widget -> Provider -> Notifier -> Repository -> API/Database
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/whats_clone.git
+git clone https://github.com/MohammedFlutter/whats_clone.git
 ```
 
 2. Navigate to project directory and install dependencies:
