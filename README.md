@@ -110,7 +110,7 @@ UI Widget -> Provider -> Notifier -> Repository -> API/Database
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/whats_clone.git
+git clone https://github.com/MohammedFlutter/whats_clone.git
 ```
 
 2. Navigate to project directory and install dependencies:
@@ -158,23 +158,13 @@ lib/
 │   ├── others/        # other features
 │   └── providers/     # general providers
 └── view/
-    ├── auth/          # Authentication screens
-    ├── chats/         # Chat-related screens
-    ├── profile/       # Profile management screens
+    ├── login/          # login page
+    ├── chats/         # Chat-related pages
+    ├── profile/       # Profile management pages
     ├── others/        # other screens
     └── widgets/       # Shared widgets and components
 ```
 
-## Environment Setup
-
-### Android
-- Minimum SDK version: 21
-- Target SDK version: 33
-- Compile SDK version: 33
-
-### iOS
-- Minimum iOS version: 11.0
-- Swift version: 5.0
 
 ## Contributing
 
@@ -184,9 +174,6 @@ lib/
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
