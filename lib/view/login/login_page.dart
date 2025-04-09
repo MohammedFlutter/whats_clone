@@ -19,6 +19,7 @@ class LoginPage extends ConsumerWidget {
       (_, authState) {
         if (authState.authResult == AuthResult.success) {
           try {
+            //todo should refactor
             ref.read(authProvider.notifier).handleSuccessfulLogin().then(
               (value) {
                 if (context.mounted) context.goNamed(value);

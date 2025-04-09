@@ -2,14 +2,18 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:whats_clone/core/utils/extensions/database_reference_extension.dart';
 import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/constants/firebase_collection_name.dart';
-import 'package:whats_clone/state/message/models/chat_messages.dart';
+import 'package:whats_clone/state/constants/firebase_field_name.dart';
 import 'package:whats_clone/state/message/models/message.dart';
 
 abstract class MessageService {
   Future<void> sendMessage({required Message message});
 
-  Stream<ChatMessages> getChatMessages({required String chatId});
+  Stream<Message> listenToNewMessage({required String chatId});
 
+  Future<List<Message>> getMessages({required String chatId});
+
+  Future<List<Message>> getMessagesAfter(
+      {required String chatId, required Message message});
 // Future<void> deleteMessage({required Message message});
 }
 
@@ -21,15 +25,16 @@ class MessageServiceFirebase implements MessageService {
   @override
   Future<void> sendMessage({required Message message}) async {
     try {
-      final newMessageRef = _databaseReference
+      final messagesRef = _databaseReference
           .child('${FirebaseCollectionName.chatsMessages}/${message.chatId}/'
-              '${FirebaseCollectionName.messages}')
-          .push();
+              '${FirebaseCollectionName.messages}');
+      final newMessageRef = messagesRef.push();
 
-      final json =
-          _toFirestorePayload(message.copyWith(chatId: newMessageRef.key!));
+      final updatedMessage = message.copyWith(id: newMessageRef.key!);
 
-      return newMessageRef.set(json);
+      final json = _toFirestorePayload(updatedMessage);
+
+      await newMessageRef.set(json);
     } catch (e, s) {
       log.e(e, stackTrace: s);
       rethrow;
@@ -43,23 +48,88 @@ class MessageServiceFirebase implements MessageService {
   }
 
   @override
-  Stream<ChatMessages> getChatMessages({required String chatId}) {
+  Stream<Message> listenToNewMessage({
+    required String chatId,
+  }) {
     return _databaseReference.getStreamFromDatabase(
       path:
           '${FirebaseCollectionName.chatsMessages}/$chatId/${FirebaseCollectionName.messages}',
-      fromJson: (json) => _fromFirestorePayload(json, chatId),
-      defaultValue: ChatMessages(chatId: chatId, messages: []),
+      fromJson: (json) => Message.fromJson(json),
+      orderPath: FirebaseFieldName.createdAt,
+      limit: 1,
+      isChangeAdded: true
     );
   }
 
-  ChatMessages _fromFirestorePayload(Map<String, dynamic> json, String chatId) {
-    final messages = json.entries.map((entry) {
-      final messageData = Map<String, dynamic>.from(entry.value);
-      return Message.fromJson(messageData);
+  Message _messageFromFirestorePayload(
+    Map<String, dynamic> json,
+  ) {
+    final messageData = Map<String, dynamic>.from(json.entries.first.value);
+    return Message.fromJson(messageData);
+  }
+
+  List<Message> _messagesFromFirestorePayload(
+    Map<String, dynamic> json,
+  ) {
+    return json.entries.map((entry) {
+      // final messageData = Map<String, dynamic>.from(entry.value);
+      return _messageFromFirestorePayload({entry.key: entry.value});
     }).toList()
       ..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
-    return ChatMessages(chatId: chatId, messages: messages);
   }
+
+  @override
+  Future<List<Message>> getMessagesAfter(
+      {required String chatId, required Message message}) async {
+    final snapshot = await _databaseReference
+        .child(
+            '${FirebaseCollectionName.chatsMessages}/$chatId/${FirebaseCollectionName.messages}')
+        .orderByChild(FirebaseFieldName.createdAt)
+        .startAfter(message.createdAt?.millisecondsSinceEpoch)
+        .get();
+    final json = snapshot.value;
+    if (json is Map) {
+      return _messagesFromFirestorePayload(json.cast<String, dynamic>());
+    }
+    return [];
+  }
+
+  @override
+  Future<List<Message>> getMessages({required String chatId}) async {
+    final snapshot = await _databaseReference
+        .child(
+            '${FirebaseCollectionName.chatsMessages}/$chatId/${FirebaseCollectionName.messages}')
+        .orderByChild(FirebaseFieldName.createdAt)
+        .get();
+    final json = snapshot.value;
+    if (json is Map) {
+      return _messagesFromFirestorePayload(json.cast<String, dynamic>());
+    }
+    return [];
+  }
+
+// Future<List<Message>> getMessagesBefore(
+//     {required String chatId ,Message? message}) async {
+//
+//   final snapshot = await _databaseReference
+//       .child(
+//           '${FirebaseCollectionName.chatsMessages}/$chatId/${FirebaseCollectionName.messages}')
+//       .orderByChild(FirebaseFieldName.createdAt)
+//       .endBefore(message)
+//       .limitToLast(messageLimit)
+//       .get();
+//   final json = snapshot.value;
+//   if (json is Map) {
+//     final messages = json.entries.map((entry) {
+//       final messageData = Map<String, dynamic>.from(entry.value);
+//       return Message.fromJson(messageData);
+//     }).toList()
+//       ..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+//     return messages;
+//   }
+//   return [];
+// }
+
 //
 // @override
 // Future<void> deleteMessage({required Message message}) {

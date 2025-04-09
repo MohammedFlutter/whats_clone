@@ -3,10 +3,12 @@ import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 
-class ChatProfileNotifier extends StreamNotifier<List<ChatProfile>> {
+class ChatProfileNotifier extends AutoDisposeStreamNotifier<List<ChatProfile>> {
+
   @override
   Stream<List<ChatProfile>> build() {
-    final userId = ref.watch(authProvider).userId!;
+    final userId = ref.watch(authProvider).userId;
+    if (userId == null) return const Stream.empty();
 
     return ref
         .watch(chatProfileRepositoryProvider)

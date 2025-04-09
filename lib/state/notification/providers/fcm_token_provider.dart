@@ -15,7 +15,7 @@ final fcmTokenServiceProvider = Provider<FcmTokenService>(
   (_) => FcmTokenServiceFireBase(),
 );
 
-final fcmTokenCacheProvider = Provider<FcmTokenCache>(
+final fcmTokenCacheProvider = AutoDisposeProvider<FcmTokenCache>(
   (_) =>
       FcmTokenCacheHive(fcmTokenBox: Hive.box<FcmToken>(HiveBoxName.fcmToken)),
 );

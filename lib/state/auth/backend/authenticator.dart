@@ -15,14 +15,13 @@ class Authenticator {
   String? get email => currentUser?.email;
 
   Future<AuthResult> signInWithGoogle() async {
+    try {
     final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
     if (googleUser == null) return AuthResult.abort;
     final googleSignInAuth = await googleUser.authentication;
     final credential = GoogleAuthProvider.credential(
         idToken: googleSignInAuth.idToken,
         accessToken: googleSignInAuth.accessToken);
-
-    try {
       await FirebaseAuth.instance.signInWithCredential(credential);
       return AuthResult.success;
     } catch (e) {
@@ -33,7 +32,11 @@ class Authenticator {
   }
 
   Future<void> logout() async {
-    await GoogleSignIn().signOut();
-    await FirebaseAuth.instance.signOut();
+    try {
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+    } catch (e, s) {
+      log.e(e, stackTrace: s);
+    }
   }
 }

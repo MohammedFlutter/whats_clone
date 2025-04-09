@@ -14,14 +14,14 @@ final profileServiceProvider = Provider<ProfileService>(
   (_) => ProfileServiceFirebase(),
 );
 
-final profileCacheProvider = Provider<ProfileCache>(
+final profileCacheProvider = AutoDisposeProvider<ProfileCache>(
   (_) => ProfileCacheHive(
     profileBox: Hive.box<Profile>(HiveBoxName.profiles),
     profileCompletionBox: Hive.box<bool>(HiveBoxName.profileCompletion),
   ),
 );
 
-final profilesCacheProvider = Provider<ProfilesCache>(
+final profilesCacheProvider = AutoDisposeProvider<ProfilesCache>(
   (_) => ProfilesCacheHive(
     profileBox: Hive.box<Profile>(HiveBoxName.profiles),
   ),

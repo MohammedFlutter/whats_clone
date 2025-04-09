@@ -26,6 +26,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeHive();
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
   FirebaseDatabase.instance
       .setPersistenceCacheSizeBytes(10 * 1024 * 1024); // 10 MB cache size
   await Supabase.initialize(

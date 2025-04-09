@@ -48,7 +48,6 @@ class AppNavigationBar extends StatefulWidget {
 class _AppNavigationBarState extends State<AppNavigationBar> {
   int _selectedIndex = 1;
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -66,9 +65,8 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
       _selectedIndex = 2;
     }
 
-    setState(() {}); // Ensure UI updates
+    setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {

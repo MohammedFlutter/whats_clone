@@ -25,7 +25,7 @@ final chatProfileRepositoryProvider = Provider<ChatProfileRepository>((ref) {
   );
 });
 
-final chatProfileCacheProvider = Provider<ChatProfileCache>((_) {
+final chatProfileCacheProvider = AutoDisposeProvider<ChatProfileCache>((_) {
   final chatProfileBox = Hive.box<ChatProfile>(HiveBoxName.chatProfiles);
   return ChatProfileCacheHive(chatProfileBox: chatProfileBox);
 });
@@ -36,7 +36,7 @@ final chatServiceProvider = Provider<ChatService>(
 final chatNotifierProvider =
     NotifierProvider<ChatNotifier, ChatState>(ChatNotifier.new);
 final chatProfilesNotifierProvider =
-    StreamNotifierProvider<ChatProfileNotifier, List<ChatProfile>>(
+    AutoDisposeStreamNotifierProvider<ChatProfileNotifier, List<ChatProfile>>(
         ChatProfileNotifier.new);
 final chatProfilesDisplayedProvider = Provider<AsyncValue<List<ChatProfile>>>(
   (ref) {

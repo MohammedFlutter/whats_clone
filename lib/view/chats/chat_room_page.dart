@@ -41,7 +41,7 @@ class ChatRoomPage extends ConsumerWidget {
           Expanded(
             child: messagesState.when(
               data: (data) {
-                return _buildListMessage(data.messages.reversed.toList());
+                return _buildListMessage(data.reversed.toList());
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Center(

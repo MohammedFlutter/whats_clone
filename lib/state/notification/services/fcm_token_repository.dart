@@ -1,3 +1,4 @@
+import 'package:whats_clone/core/utils/logger.dart';
 import 'package:whats_clone/state/notification/model/fcm_token.dart';
 import 'package:whats_clone/state/notification/services/fcm_token_cache.dart';
 import 'package:whats_clone/state/notification/services/fcm_token_service.dart';
@@ -29,7 +30,11 @@ class FcmTokenRepository {
   }
 
   Future<void> deleteToken(String userId) async {
-    await _fcmTokenService.deleteToken(userId);
-    await _fcmTokenCache.deleteToken(userId);
+    try {
+      await _fcmTokenService.deleteToken(userId);
+      await _fcmTokenCache.deleteToken(userId);
+    } catch (e, st) {
+      log.e(e, stackTrace: st);
+    }
   }
 }

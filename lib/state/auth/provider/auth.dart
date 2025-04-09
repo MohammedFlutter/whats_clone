@@ -6,7 +6,9 @@ import 'package:whats_clone/main.dart';
 import 'package:whats_clone/state/auth/backend/authenticator.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
+import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
+import 'package:whats_clone/state/message/provider/message_provider.dart';
 import 'package:whats_clone/state/notification/providers/fcm_token_provider.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
@@ -70,22 +72,31 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
+    state = state.copyWith(isLoading: true);
     var userId = state.userId;
     if (userId == null) return;
     await ref.read(fcmTokenRepositoryProvider).deleteToken(userId);
     await _authenticator.logout();
     await _cleanStorage();
+    state = state.copyWith(isLoading: false, authResult: null);
   }
 
   Future<void> _cleanStorage() async {
-    await Future.wait([
-      Hive.deleteBoxFromDisk(HiveBoxName.chats),
-      Hive.deleteBoxFromDisk(HiveBoxName.chatProfiles),
-      Hive.deleteBoxFromDisk(HiveBoxName.chatMessages),
-      Hive.deleteBoxFromDisk(HiveBoxName.fcmToken),
-      Hive.deleteBoxFromDisk(HiveBoxName.profiles),
-      Hive.deleteBoxFromDisk(HiveBoxName.profileCompletion),
-    ]);
-    return openHiveBoxes();
+    state = state.copyWith(isLoading: true);
+    ref.invalidateSelf();
+    await Hive.deleteBoxFromDisk(HiveBoxName.chats);
+    await Hive.deleteBoxFromDisk(HiveBoxName.chatProfiles);
+    await Hive.deleteBoxFromDisk(HiveBoxName.chatMessages);
+    await Hive.deleteBoxFromDisk(HiveBoxName.fcmToken);
+    await Hive.deleteBoxFromDisk(HiveBoxName.profiles);
+    await Hive.deleteBoxFromDisk(HiveBoxName.profileCompletion);
+    await openHiveBoxes();
+    ref.invalidate(fcmTokenCacheProvider);
+    ref.invalidate(profileCacheProvider);
+    ref.invalidate(chatMessagesCacheProvider);
+    ref.invalidate(chatProfileCacheProvider);
+    ref.invalidate(profilesCacheProvider);
+    state = state.copyWith(isLoading: false);
+
   }
 }

@@ -79,7 +79,6 @@ class FormContent extends StatelessWidget {
   }
 
   String? _phoneNumberValidator(String? phone) {
-    //todo validation dont work
     if (phone == null || phone.isEmpty) {
       return Strings.phoneNumberIsRequired;
     }

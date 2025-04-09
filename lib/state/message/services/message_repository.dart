@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:whats_clone/state/chat/services/chat_repository.dart';
-import 'package:whats_clone/state/message/models/chat_messages.dart';
 import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/message/services/chat_messages_cache.dart';
 import 'package:whats_clone/state/message/services/message_service.dart';
+import 'package:whats_clone/core/utils/logger.dart';
+
+
+// const int messageLimit = 20;
 
 class MessageRepository {
   MessageRepository(
@@ -18,21 +21,67 @@ class MessageRepository {
   final MessageService _messageService;
   final ChatRepository _chatRepository;
 
-  Stream<ChatMessages> getChatMessages({required String chatId}) async* {
+  Stream<List<Message>> getChatMessages({required String chatId}) async* {
     try {
-      await for (final chatMessages
-          in _messageService.getChatMessages(chatId: chatId)) {
-        _chatMessagesCache.setChatMessages(chatMessages);
-        yield chatMessages;
+      final messages = <String?, Message>{};
+      messages.addEntries((await getAllMessages(chatId: chatId))
+          .map((message) => MapEntry(message.id, message)));
+      yield messages.values.toList();
+      await for (final message
+          in _messageService.listenToNewMessage(chatId: chatId)) {
+        messages[message.id] = message;
+        _chatMessagesCache.setMessage(message);
+        yield messages.values.toList();
       }
-    } catch (_) {
+    } catch (e, st) {
+      log.e(e, stackTrace: st);
       final cachedMessages = _chatMessagesCache.getMessages(chatId);
       if (cachedMessages != null) {
-        yield cachedMessages;
+        yield cachedMessages.messages;
       } else {
         rethrow;
       }
     }
+  }
+
+  Future<List<Message>> getAllMessages({
+    required String chatId,
+  }) async {
+    final cachedMessages = _chatMessagesCache.getMessages(chatId);
+    if (cachedMessages != null) {
+      var messages = List.of(cachedMessages.messages);
+      final lastMessage = _getLatestMessage(messages);
+      if (lastMessage == null) {
+        return messages;
+      }
+      final newMessages = await _messageService.getMessagesAfter(
+        chatId: chatId,
+        message: lastMessage,
+      );
+      if (newMessages.isEmpty) {
+        return messages;
+      }
+      _chatMessagesCache.addMessages(newMessages);
+      messages.addAll(newMessages);
+      return messages;
+    } else {
+      final messages = await _messageService.getMessages(chatId: chatId);
+      _chatMessagesCache.addMessages(messages);
+      return messages;
+    }
+  }
+
+  Message? _getLatestMessage(List<Message> messages) {
+    if (messages.isEmpty) {
+      return null;
+    }
+    var lastMessage = messages.first;
+    for (final message in messages) {
+      if (message.createdAt!.isAfter(lastMessage.createdAt!)) {
+        lastMessage = message;
+      }
+    }
+    return lastMessage;
   }
 
   Future<void> sendMessage({required Message message}) async {

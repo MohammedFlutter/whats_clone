@@ -60,7 +60,7 @@ class ChatServiceFirebase implements ChatService {
   Stream<Chat?> _getChatById(String chatId) {
     return _databaseRef.getStreamFromDatabase(
       path: '${FirebaseCollectionName.chats}/$chatId',
-      fromJson: (map) => Chat.fromJson(map),
+      fromJson: (json) => Chat.fromJson(json),
       defaultValue: null,
     );
   }
