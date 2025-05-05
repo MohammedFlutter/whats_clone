@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/state/providers/theme_provider.dart';
 import 'package:whats_clone/view/constants/strings.dart';
+import 'package:whats_clone/view/constants/uris.dart';
 import 'package:whats_clone/view/more/widgets/more_card.dart';
 import 'package:whats_clone/view/widgets/app_alert_dialog.dart';
 import 'package:whats_clone/view/widgets/app_list_tile.dart';
@@ -47,6 +49,7 @@ class MorePage extends ConsumerWidget {
                     ),
                     buildSystemModeCard(ref),
                     buildLightDarkCard(ref),
+                    buildPrivacyCard(),
                     buildLogoutCard(context, ref),
                   ],
                 ),
@@ -54,13 +57,24 @@ class MorePage extends ConsumerWidget {
             ),
     );
   }
+
   Widget buildSystemModeCard(WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
 
     return MoreCard(
       icon: Icons.settings_brightness,
-      title: themeMode == ThemeMode.system ? 'System Mode: ON' : 'System Mode: OFF',
+      title: themeMode == ThemeMode.system
+          ? 'System Mode: ON'
+          : 'System Mode: OFF',
       onPressed: () => ref.read(themeProvider.notifier).toggleSystemMode(),
+    );
+  }
+
+  Widget buildPrivacyCard() {
+    return MoreCard(
+      icon: Icons.privacy_tip_outlined,
+      title: Strings.privacy,
+      onPressed: () async => launchUrl(Uri.parse(Uris.privacy)),
     );
   }
 
@@ -68,14 +82,14 @@ class MorePage extends ConsumerWidget {
     final themeMode = ref.watch(themeProvider);
 
     return MoreCard(
-      icon: themeMode == ThemeMode.dark ? Icons.nightlight_round : Icons.wb_sunny,
+      icon:
+          themeMode == ThemeMode.dark ? Icons.nightlight_round : Icons.wb_sunny,
       title: themeMode == ThemeMode.dark ? 'Dark Mode' : 'Light Mode',
       onPressed: themeMode == ThemeMode.system
           ? null
           : () => ref.read(themeProvider.notifier).toggleLightDarkMode(),
     );
   }
-
 
   MoreCard buildLogoutCard(BuildContext context, WidgetRef ref) {
     return MoreCard(
