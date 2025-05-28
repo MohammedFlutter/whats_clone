@@ -22,7 +22,7 @@ class NavigationWrapper extends StatelessWidget {
           ? null
           : AppNavigationBar(
               navigationShell: navigationShell,
-              navigationDestinations: destinations,
+              navigationDestinations: destinations(context),
             ),
     );
   }

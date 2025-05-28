@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/message/provider/message_provider.dart';
@@ -30,7 +31,7 @@ class ChatRoomPage extends ConsumerWidget {
           children: [
             Text(chatProfile.name),
             Text(
-              ref.watch(subtitleChatRoomProvider(chatProfile.id)),
+              ref.watch(subtitleChatRoomProvider((chatProfile.id,context.l10n))),
               style: Theme.of(context).textTheme.bodyMedium,
             )
           ],

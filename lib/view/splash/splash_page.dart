@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/splash/provider/splash_provider.dart';
 import 'package:whats_clone/view/constants/images.dart';
 import 'package:whats_clone/view/constants/strings.dart';
@@ -51,7 +52,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                 Image.asset(isLight ? Images.logoLight : Images.logoDark),
                 const SizedBox(width: 8.0),
                 Text(
-                  Strings.appTitle,
+                  context.l10n.appTitle,
                   style: Theme.of(context).textTheme.headlineLarge,
                 )
               ],

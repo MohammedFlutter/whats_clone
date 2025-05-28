@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
 import 'package:whats_clone/view/constants/images.dart';
 import 'package:whats_clone/view/constants/strings.dart';
@@ -37,7 +38,7 @@ class OnboardingPage extends ConsumerWidget {
                   height: 42,
                 ),
                 Text(
-                  Strings.onboardingTitle,
+                  context.l10n.onboardingTitle,
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -47,7 +48,7 @@ class OnboardingPage extends ConsumerWidget {
                 TextButton(
                     onPressed: () async => launchUrl(Uri.parse(Uris.privacy)),
                     child: Text(
-                      Strings.termsAndPrivacyPolicy,
+                      context.l10n.termsAndPrivacyPolicy,
                       style: Theme.of(context).textTheme.bodyLarge,
                     )),
                 const SizedBox(
@@ -58,7 +59,7 @@ class OnboardingPage extends ConsumerWidget {
                       onboardingEvent.setOnboardingComplete();
                       context.goNamed(RouteName.login);
                     },
-                    text: Strings.startMessaging),
+                    text: context.l10n.startMessaging),
                 const SizedBox(
                   height: 20,
                 )

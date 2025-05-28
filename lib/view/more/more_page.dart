@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
 import 'package:whats_clone/state/providers/theme_provider.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/constants/uris.dart';
 import 'package:whats_clone/view/more/widgets/more_card.dart';
 import 'package:whats_clone/view/widgets/app_alert_dialog.dart';
@@ -19,7 +19,7 @@ class MorePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(profileNotifierProvider).profile;
     return Scaffold(
-      appBar: AppBar(title: const Text(Strings.more)),
+      appBar: AppBar(title: Text(context.l10n.more)),
       body: profile == null
           ? const Center(
               child: CircularProgressIndicator(),
@@ -49,7 +49,7 @@ class MorePage extends ConsumerWidget {
                     ),
                     buildSystemModeCard(ref),
                     buildLightDarkCard(ref),
-                    buildPrivacyCard(),
+                    buildPrivacyCard(context),
                     buildLogoutCard(context, ref),
                   ],
                 ),
@@ -60,31 +60,33 @@ class MorePage extends ConsumerWidget {
 
   Widget buildSystemModeCard(WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
+    final l10n = ref.context.l10n;
 
     return MoreCard(
       icon: Icons.settings_brightness,
       title: themeMode == ThemeMode.system
-          ? 'System Mode: ON'
-          : 'System Mode: OFF',
+          ? l10n.systemModeOn
+          : l10n.systemModeOff,
       onPressed: () => ref.read(themeProvider.notifier).toggleSystemMode(),
     );
   }
 
-  Widget buildPrivacyCard() {
+  Widget buildPrivacyCard(BuildContext context) {
     return MoreCard(
       icon: Icons.privacy_tip_outlined,
-      title: Strings.privacy,
+      title: context.l10n.privacy,
       onPressed: () async => launchUrl(Uri.parse(Uris.privacy)),
     );
   }
 
   Widget buildLightDarkCard(WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
+    final l10n = ref.context.l10n;
 
     return MoreCard(
       icon:
           themeMode == ThemeMode.dark ? Icons.nightlight_round : Icons.wb_sunny,
-      title: themeMode == ThemeMode.dark ? 'Dark Mode' : 'Light Mode',
+      title: themeMode == ThemeMode.dark ? l10n.darkMode : l10n.lightMode,
       onPressed: themeMode == ThemeMode.system
           ? null
           : () => ref.read(themeProvider.notifier).toggleLightDarkMode(),
@@ -94,13 +96,13 @@ class MorePage extends ConsumerWidget {
   MoreCard buildLogoutCard(BuildContext context, WidgetRef ref) {
     return MoreCard(
         icon: Icons.logout,
-        title: Strings.logout,
+        title: context.l10n.logout,
         onPressed: () async {
           AppAlertDialog.showDialog(
               context: context,
-              title: Strings.logout,
-              content: Strings.logoutDescription,
-              confirmText: 'Logout',
+              title: context.l10n.logout,
+              content: context.l10n.logoutDescription,
+              confirmText: context.l10n.logout,
               onConfirm: () async {
                 await ref.read(authProvider.notifier).logout();
                 if (context.mounted) {

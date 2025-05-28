@@ -1,0 +1,95 @@
+{
+  "@@locale": "ar",
+
+  "appTitle": "شات عرب",
+
+  "onboardingTitle": "تواصل بسهولة مع عائلتك وأصدقائك عبر البلدان",
+  "termsAndPrivacyPolicy": "الشروط وسياسة الخصوصية",
+  "startMessaging": "ابدأ المحادثة",
+
+  "signIn": "تسجيل الدخول",
+  "signInWithGoogle": "تسجيل الدخول باستخدام جوجل",
+  "authenticationFailed": "فشل في المصادقة",
+  "loginTitle": "مرحبًا بعودتك إلى {appTitle}",
+  "@loginTitle": {
+    "placeholders": {
+      "appTitle": {}
+    }
+  },
+  "loginDescription": "سجّل الدخول باستخدام حسابك على جوجل للوصول إلى جميع الميزات والاستمتاع بتجربة سلسة.",
+
+  "createProfile": "إنشاء ملف شخصي",
+  "editProfile": "تعديل الملف الشخصي",
+  "name": "الاسم",
+  "bio": "نبذة",
+  "phone": "رقم الهاتف",
+  "save": "حفظ",
+  "searchCountry": "ابحث عن الدولة",
+  "nameIsRequired": "الاسم مطلوب",
+  "phoneNumberIsRequired": "رقم الهاتف مطلوب",
+  "invalidPhoneNumber": "رقم الهاتف غير صالح",
+  "profilePhoto": "صورة الملف الشخصي",
+  "camera": "الكاميرا",
+  "gallery": "المعرض",
+  "errorLoadingProfile": "حدث خطأ أثناء تحميل الملف الشخصي",
+
+  "contacts": "جهات الاتصال",
+  "chats": "الدردشات",
+  "more": "المزيد",
+
+  "contactOnApp": "جهات الاتصال على {appTitle}",
+  "@contactOnApp": {
+    "placeholders": {
+      "appTitle": {}
+    }
+  },
+  "searchContacts": "ابحث في جهات الاتصال...",
+  "inviteToApp": "ادعُ إلى {appTitle}",
+  "@inviteToApp": {
+    "placeholders": {
+      "appTitle": {}
+    }
+  },
+
+  "searchChat": "ابحث في الدردشة...",
+  "noChatAvailable": "لا توجد دردشات متاحة.",
+  "online": "متصل",
+
+  "logout": "تسجيل الخروج",
+  "privacy": "الخصوصية",
+  "logoutDescription": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "yearsAgo": "منذ {count} سنة",
+  "monthsAgo": "منذ {count} شهر",
+  "weeksAgo": "منذ {count} أسبوع",
+  "daysAgo": "منذ {count} يوم",
+  "hoursAgo": "منذ {count} ساعة",
+  "minutesAgo": "منذ {count} دقيقة",
+  "justNow": "منذ قليل",
+
+  "@yearsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@monthsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@weeksAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@daysAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@hoursAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@minutesAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "systemModeOn": "الوضع التلقائي: مفعل",
+  "systemModeOff": "الوضع التلقائي: غير مفعل",
+  "darkMode": "الوضع الداكن",
+  "lightMode": "الوضع الفاتح"
+
+
+
+
+}

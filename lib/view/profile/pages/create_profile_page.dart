@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
 import 'package:whats_clone/state/image_upload/model/upload_state.dart';
 import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
@@ -68,8 +69,8 @@ class _CreateProfilePageState extends ConsumerState<CreateProfilePage> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            Strings.createProfile,
+          title:  Text(
+            context.l10n.createProfile,
           ),
           leadingWidth: 0,
           leading: const SizedBox(),

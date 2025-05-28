@@ -1,0 +1,92 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Chat Arb",
+
+  "onboardingTitle": "Connect easily with your family and friends over countries",
+  "termsAndPrivacyPolicy": "Terms & Privacy Policy",
+  "startMessaging": "Start Messaging",
+
+  "signIn": "Sign In",
+  "signInWithGoogle": "Sign In with Google",
+  "authenticationFailed": "Authentication Failed",
+  "loginTitle": "Welcome back to {appTitle}",
+  "@loginTitle": {
+    "placeholders": {
+      "appTitle": {}
+    }
+  },
+  "loginDescription": "Sign in with your Google account to access all features and enjoy a seamless experience.",
+
+  "createProfile": "Create Profile",
+  "editProfile": "Edit Profile",
+  "name": "Name",
+  "bio": "Bio",
+  "phone": "Phone Number",
+  "save": "Save",
+  "searchCountry": "Search country",
+  "nameIsRequired": "Name is required",
+  "phoneNumberIsRequired": "Phone number is required",
+  "invalidPhoneNumber": "Invalid phone number",
+  "profilePhoto": "Profile photo",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "errorLoadingProfile": "Error loading profile",
+
+  "contacts": "Contacts",
+  "chats": "Chats",
+  "more": "More",
+
+  "contactOnApp": "Contacts On {appTitle}",
+  "@contactOnApp": {
+    "placeholders": {
+      "appTitle": {}
+    }
+  },
+  "searchContacts": "Search contacts...",
+  "inviteToApp": "Invite to {appTitle}",
+  "@inviteToApp": {
+    "placeholders": {
+      "appTitle": {}
+    }
+  },
+
+  "searchChat": "Search chat...",
+  "noChatAvailable": "No chats available.",
+  "online": "Online",
+
+  "logout": "Logout",
+  "privacy": "Privacy",
+  "logoutDescription": "Are you sure you want to logout?",
+  "yearsAgo": "{count}y ago",
+  "monthsAgo": "{count}mo ago",
+  "weeksAgo": "{count}w ago",
+  "daysAgo": "{count}d ago",
+  "hoursAgo": "{count}h ago",
+  "minutesAgo": "{count}m ago",
+  "justNow": "Just now",
+
+  "@yearsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@monthsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@weeksAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@daysAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@hoursAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@minutesAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "systemModeOn": "System Mode: ON",
+  "systemModeOff": "System Mode: OFF",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode"
+
+}

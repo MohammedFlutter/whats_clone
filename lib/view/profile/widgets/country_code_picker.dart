@@ -1,6 +1,7 @@
 import 'package:country_code_picker_plus/country_code_picker_plus.dart'
     as package;
 import 'package:flutter/material.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/view/constants/strings.dart';
 
 class CountryCodePicker extends StatelessWidget {
@@ -27,7 +28,7 @@ class CountryCodePicker extends StatelessWidget {
       builder: (country) => _CountryCodeButton(country: country),
       showDropDownButton: false,
       showOnlyCountryWhenClosed: false,
-      searchDecoration: const InputDecoration(hintText: Strings.searchCountry),
+      searchDecoration:  InputDecoration(hintText: context.l10n.searchCountry),
     );
   }
 }

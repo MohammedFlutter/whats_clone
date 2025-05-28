@@ -1,5 +1,6 @@
 
 lib/core/secrets.dart
+android/app/google-services.json
 #dart generator
 **/*.config.dart
 **/*.freezed.dart

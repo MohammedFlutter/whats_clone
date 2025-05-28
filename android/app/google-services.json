@@ -8,17 +8,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:39690319251:android:b812579772df1c728de466",
+        "mobilesdk_app_id": "1:39690319251:android:81d9d2da930fab4b8de466",
         "android_client_info": {
-          "package_name": "com.mohammed_ramadan.whats_clone"
+          "package_name": "com.mohammed_ramadan.chat_arb"
         }
       },
       "oauth_client": [
         {
-          "client_id": "39690319251-gpquo179a3hhk69kmdci87mvnqesksma.apps.googleusercontent.com",
+          "client_id": "39690319251-ag0273l2o1l20argllvjvcupcfatggh8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mohammed_ramadan.whats_clone",
+            "package_name": "com.mohammed_ramadan.chat_arb",
+            "certificate_hash": "b6960bc599c0a3f48cc41fa59afd45ea3ab19aa5"
+          }
+        },
+        {
+          "client_id": "39690319251-qua1i023v0qndc2520pvg2q3o88kof9m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohammed_ramadan.chat_arb",
             "certificate_hash": "aeb5a0b3bc743bfc29e2e5cfa2512e631a2450e2"
           }
         },

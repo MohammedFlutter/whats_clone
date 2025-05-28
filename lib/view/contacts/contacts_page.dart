@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/routes/route_params.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/providers/contacts_provider.dart';
@@ -37,11 +38,11 @@ class _ContactPageState extends ConsumerState<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(Strings.contacts)),
+      appBar: AppBar(title:  Text(context.l10n.contacts)),
       body: Column(
         children: [
           AppSearchBar(
-            hintText: Strings.searchContacts,
+            hintText: context.l10n.searchContacts,
             onChanged: (value) =>
                 ref.watch(contactSearchQueryProvider.notifier).state = value,
           ),
@@ -63,7 +64,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
               : searchContactsProvider;
 
           return ref.watch(contactsProvider).when(
-                data: _buildContactList,
+                data:(contacts)=>_buildContactList(context, contacts),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, _) => Center(child: Text(error.toString())),
               );
@@ -72,7 +73,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
     );
   }
 
-  Widget _buildContactList(List<AppContact> contacts) {
+  Widget _buildContactList(BuildContext context, List<AppContact> contacts) {
     if (contacts.isEmpty) {
       return const Center(child: Text('No contacts found'));
     }
@@ -80,16 +81,17 @@ class _ContactPageState extends ConsumerState<ContactPage> {
     final registered = contacts.where((c) => c.isRegistered).toList();
     final unregistered = contacts.where((c) => !c.isRegistered).toList();
 
+
     return CustomScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       physics: const BouncingScrollPhysics(),
       slivers: [
         if (registered.isNotEmpty) ...[
-          _buildSectionHeader(Strings.contactOnApp),
+          _buildSectionHeader(context.l10n.contactOnApp(context.l10n.appTitle)),
           _buildContactSection(registered, _handleRegisteredContact),
         ],
         if (unregistered.isNotEmpty) ...[
-          _buildSectionHeader(Strings.inviteToApp),
+          _buildSectionHeader(context.l10n.inviteToApp(context.l10n.appTitle)),
           _buildContactSection(unregistered, _handleUnregisteredContact),
         ],
       ],
