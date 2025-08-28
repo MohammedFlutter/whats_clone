@@ -61,9 +61,7 @@ class ChatMessagesCacheHive implements ChatMessagesCache {
 
   @override
   Future<void> addMessages(List<Message> message) {
-    if (message.isEmpty)
-      return Future.value();
-
+    if (message.isEmpty) return Future.value();
     final chatId = message.last.chatId;
     final chatMessages = _chatMessageBox.get(chatId);
     if (chatMessages != null) {

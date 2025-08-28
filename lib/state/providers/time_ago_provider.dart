@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whats_clone/l10n/app_localizations.dart';
 
 class CurrentTimeNotifier extends StateNotifier<DateTime> {
   late final Timer _timer;
@@ -23,16 +24,29 @@ final currentTimeProvider =
   (ref) => CurrentTimeNotifier(),
 );
 
-final timeAgoProvider =
-    Provider.autoDispose.family<String, DateTime>((ref, dateTime) {
+final timeAgoProvider = Provider.autoDispose
+    .family<String, (DateTime dateTime, AppLocalizations l10n)>((ref, args) {
+  final dateTime = args.$1;
+  final l10n = args.$2;
+
   final duration = ref.watch(currentTimeProvider).difference(dateTime);
-  if (duration.inDays > 0) {
-    return '${duration.inDays}d ago';
-  } else if (duration.inHours > 0) {
-    return '${duration.inHours}h ago';
-  } else if (duration.inMinutes > 0) {
-    return '${duration.inMinutes}m ago';
+
+  if (duration.inDays >= 365) {
+    final years = (duration.inDays / 365).floor();
+    return l10n.yearsAgo(years);
+  } else if (duration.inDays >= 30) {
+    final months = (duration.inDays / 30).floor();
+    return l10n.monthsAgo(months);
+  } else if (duration.inDays >= 7) {
+    final weeks = (duration.inDays / 7).floor();
+    return l10n.weeksAgo(weeks);
+  } else if (duration.inDays >= 1) {
+    return l10n.daysAgo(duration.inDays);
+  } else if (duration.inHours >= 1) {
+    return l10n.hoursAgo(duration.inHours);
+  } else if (duration.inMinutes >= 1) {
+    return l10n.minutesAgo(duration.inMinutes);
   } else {
-    return 'Just now';
+    return l10n.justNow;
   }
 });

@@ -12,7 +12,7 @@ class NavigationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final location = GoRouter.of(context).state?.name;
+    final location = GoRouter.of(context).state.name;
 
     // Determine if the bottom navigation bar should be hidden
     final hideBottomNav = hideRoutes.contains(location) ;
@@ -22,7 +22,7 @@ class NavigationWrapper extends StatelessWidget {
           ? null
           : AppNavigationBar(
               navigationShell: navigationShell,
-              navigationDestinations: destinations,
+              navigationDestinations: destinations(context),
             ),
     );
   }

@@ -57,8 +57,7 @@ class AppListTile extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                trailing ??const SizedBox(),
-
+                trailing ?? const SizedBox(),
               ],
             ),
           ),
@@ -92,32 +91,43 @@ class ImageAvatar extends StatelessWidget {
       }
     }
 
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        borderRadius: _borderRadius,
-        color: Theme.of(context).colorScheme.primary,
-        image: (url != null)
-            ? DecorationImage(
-                image: NetworkImage(
-                  url!,
+    return ClipRRect(
+      borderRadius: _borderRadius,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+        //   borderRadius: _borderRadius,
+          color: Theme.of(context).colorScheme.primary,
+        //   image: (url != null)
+        //       ? DecorationImage(
+        //           image: NetworkImage(
+        //             url!,
+        //           ),
+        //           fit: BoxFit.cover,
+        //         )
+        //       : null,
+        ),
+        child: (url == null)
+            ? Center(
+                child: Text(
+                  firstTwoLetters,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: AppColors.offWhite),
                 ),
-                fit: BoxFit.cover,
               )
-            : null,
+            : Image.network(url!,fit: BoxFit.cover,errorBuilder: (context, error, stackTrace) =>Center(
+          child: Text(
+            firstTwoLetters,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: AppColors.offWhite),
+          ),
+        ) ,),
       ),
-      child: (url == null)
-          ? Center(
-              child: Text(
-                firstTwoLetters,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(color: AppColors.offWhite),
-              ),
-            )
-          : null,
     );
   }
 }

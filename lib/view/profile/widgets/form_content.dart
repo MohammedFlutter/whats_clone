@@ -1,7 +1,7 @@
 import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:flutter/material.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/core/utils/extensions/phone_number_extension.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/profile/widgets/phone_number_input.dart';
 import 'package:whats_clone/view/profile/widgets/profile_picture.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
@@ -35,23 +35,24 @@ class FormContent extends StatelessWidget {
           const SizedBox(height: 30),
           _buildTextField(
             controller: nameController,
-            hintText: Strings.name,
-            validator: _validateName,
+            hintText: context.l10n.name,
+            validator: (value) => validateName(context, value),
           ),
           const SizedBox(height: 12),
           _buildTextField(
             controller: bioController,
-            hintText: Strings.bio,
+            hintText: context.l10n.bio,
           ),
           const SizedBox(height: 12),
           PhoneNumberInput(
             phoneController: phoneController,
             onDialCodeChanged: onDialCodeChanged,
-            phoneNumberValidator: _phoneNumberValidator,
+            phoneNumberValidator: (value) =>
+                phoneNumberValidator(context, value, dialCode),
           ),
           const SizedBox(height: 12),
           const Spacer(),
-          AppFillButton(text: Strings.save, onPressed: onSave),
+          AppFillButton(text: context.l10n.save, onPressed: onSave),
           const SizedBox(height: 32),
         ],
       ),
@@ -71,26 +72,32 @@ class FormContent extends StatelessWidget {
     );
   }
 
-  String? _validateName(String? value) {
+  String? validateName(BuildContext context, String? value) {
     if (value == null || value.isEmpty) {
-      return Strings.nameIsRequired;
+      return context.l10n.nameIsRequired;
     }
     return null;
   }
 
-  String? _phoneNumberValidator(String? phone) {
+  String? phoneNumberValidator(
+      BuildContext context, String? phone, String dialCode) {
     if (phone == null || phone.isEmpty) {
-      return Strings.phoneNumberIsRequired;
+      return context.l10n.phoneNumberIsRequired;
     }
+
     final phoneNumberUtil = PhoneNumberUtil.instance;
     final regionCode =
         phoneNumberUtil.getRegionCodeForCountryCode(int.parse(dialCode));
 
     final phoneNumber = phoneNumberUtil.tryParsePhoneNumber(
-        numberToParse: phone, defaultRegion: regionCode);
+      numberToParse: phone,
+      defaultRegion: regionCode,
+    );
+
     if (phoneNumber == null || !phoneNumberUtil.isValidNumber(phoneNumber)) {
-      return Strings.invalidPhoneNumber;
+      return context.l10n.invalidPhoneNumber;
     }
+
     return null;
   }
 }

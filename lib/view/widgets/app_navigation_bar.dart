@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/theme/app_colors.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/view/constants/icons_assets.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 
 class Destination {
   const Destination({
@@ -16,20 +16,20 @@ class Destination {
   final String label;
 }
 
-const destinations = [
-  Destination(
-    iconPath: IconsAssets.contacts,
-    label: Strings.contacts,
-  ),
-  Destination(
-    iconPath: IconsAssets.chats,
-    label: Strings.chats,
-  ),
-  Destination(
-    iconPath: IconsAssets.more,
-    label: Strings.more,
-  ),
-];
+List<Destination> destinations(BuildContext context) => [
+      Destination(
+        iconPath: IconsAssets.contacts,
+        label: context.l10n.contacts,
+      ),
+      Destination(
+        iconPath: IconsAssets.chats,
+        label: context.l10n.chats,
+      ),
+      Destination(
+        iconPath: IconsAssets.more,
+        label: context.l10n.more,
+      ),
+    ];
 
 class AppNavigationBar extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -55,7 +55,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   }
 
   void _updateSelectedIndex() {
-    final String location = GoRouter.of(context).state!.path!;
+    final String location = GoRouter.of(context).state.path!;
 
     if (location.startsWith('/${RouteName.contacts}')) {
       _selectedIndex = 0;

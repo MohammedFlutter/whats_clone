@@ -24,9 +24,12 @@ class MessageRepository {
   Stream<List<Message>> getChatMessages({required String chatId}) async* {
     try {
       final messages = <String?, Message>{};
-      messages.addEntries((await getAllMessages(chatId: chatId))
-          .map((message) => MapEntry(message.id, message)));
-      yield messages.values.toList();
+
+      await for (final previousMessages in getPreviousMessages(chatId: chatId)){
+        messages.addEntries(previousMessages.map((message) => MapEntry(message.id, message)));
+        yield messages.values.toList();
+      }
+
       await for (final message
           in _messageService.listenToNewMessage(chatId: chatId)) {
         messages[message.id] = message;
@@ -44,30 +47,31 @@ class MessageRepository {
     }
   }
 
-  Future<List<Message>> getAllMessages({
+  Stream<List<Message>> getPreviousMessages({
     required String chatId,
-  }) async {
+  }) async*  {
     final cachedMessages = _chatMessagesCache.getMessages(chatId);
     if (cachedMessages != null) {
       var messages = List.of(cachedMessages.messages);
+      yield messages;
       final lastMessage = _getLatestMessage(messages);
       if (lastMessage == null) {
-        return messages;
+        return ;
       }
       final newMessages = await _messageService.getMessagesAfter(
         chatId: chatId,
         message: lastMessage,
       );
       if (newMessages.isEmpty) {
-        return messages;
+        return ;
       }
       _chatMessagesCache.addMessages(newMessages);
       messages.addAll(newMessages);
-      return messages;
+      yield messages;
     } else {
       final messages = await _messageService.getMessages(chatId: chatId);
       _chatMessagesCache.addMessages(messages);
-      return messages;
+      yield messages;
     }
   }
 

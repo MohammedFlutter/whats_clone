@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/login/widgets/login_header.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
 import 'package:whats_clone/view/widgets/app_snake_bar.dart';
@@ -28,19 +28,19 @@ class LoginPage extends ConsumerWidget {
           } catch (e) {
             AppSnakeBar.showErrorSnakeBar(
                 context: context,
-                message: Strings.errorLoadingProfile,
+                message: context.l10n.errorLoadingProfile,
                 onRetry: ref.read(authProvider.notifier).handleSuccessfulLogin);
           }
         } else if (authState.authResult == AuthResult.failed) {
           AppSnakeBar.showErrorSnakeBar(
-              context: context, message: Strings.authenticationFailed);
+              context: context, message: context.l10n.authenticationFailed);
         }
       },
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(Strings.signIn),
+        title: Text(context.l10n.signIn),
       ),
       body: const LoginPageBody(),
     );
@@ -95,7 +95,7 @@ class LoginPageBody extends ConsumerWidget {
         children: [
           const LoginHeader(),
           AppFillButton(
-            text: Strings.signInWithGoogle,
+            text: context.l10n.signInWithGoogle,
             onPressed: authEvent.signInWithGoogle,
           ),
         ],
