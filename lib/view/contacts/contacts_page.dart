@@ -7,7 +7,6 @@ import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/chat/provider/chat_provider.dart';
 import 'package:whats_clone/state/contacts/model/app_contact.dart';
 import 'package:whats_clone/state/contacts/providers/contacts_provider.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/widgets/app_list_tile.dart';
 import 'package:whats_clone/view/widgets/app_search_bar.dart';
 
@@ -38,7 +37,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Text(context.l10n.contacts)),
+      appBar: AppBar(title: Text(context.l10n.contacts)),
       body: Column(
         children: [
           AppSearchBar(
@@ -64,7 +63,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
               : searchContactsProvider;
 
           return ref.watch(contactsProvider).when(
-                data:(contacts)=>_buildContactList(context, contacts),
+                data: (contacts) => _buildContactList(context, contacts),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, _) => Center(child: Text(error.toString())),
               );
@@ -80,7 +79,6 @@ class _ContactPageState extends ConsumerState<ContactPage> {
 
     final registered = contacts.where((c) => c.isRegistered).toList();
     final unregistered = contacts.where((c) => !c.isRegistered).toList();
-
 
     return CustomScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -132,9 +130,12 @@ class _ContactPageState extends ConsumerState<ContactPage> {
         .read(chatNotifierProvider.notifier)
         .createChat(antherUserId: contact.userId!);
     if (!mounted || chatProfile == null) return;
-    context.goNamed(RouteName.chatRoom, pathParameters: {
-      RouteParams.chatId: chatProfile.chatId,
-    },);
+    context.goNamed(
+      RouteName.chatRoom,
+      pathParameters: {
+        RouteParams.chatId: chatProfile.chatId,
+      },
+    );
   }
 
   void _handleUnregisteredContact(AppContact contact) {

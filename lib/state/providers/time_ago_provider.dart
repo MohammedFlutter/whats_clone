@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:whats_clone/l10n/app_localizations.dart';
 
 class CurrentTimeNotifier extends StateNotifier<DateTime> {
   late final Timer _timer;

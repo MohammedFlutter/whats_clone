@@ -5,7 +5,6 @@ import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/auth/models/auth_result.dart';
 import 'package:whats_clone/state/auth/models/auth_state.dart';
 import 'package:whats_clone/state/auth/provider/auth.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/login/widgets/login_header.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
 import 'package:whats_clone/view/widgets/app_snake_bar.dart';

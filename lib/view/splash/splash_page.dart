@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/splash/provider/splash_provider.dart';
 import 'package:whats_clone/view/constants/images.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});

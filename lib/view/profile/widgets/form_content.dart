@@ -2,7 +2,6 @@ import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:flutter/material.dart';
 import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/core/utils/extensions/phone_number_extension.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/profile/widgets/phone_number_input.dart';
 import 'package:whats_clone/view/profile/widgets/profile_picture.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
@@ -48,7 +47,8 @@ class FormContent extends StatelessWidget {
           PhoneNumberInput(
             phoneController: phoneController,
             onDialCodeChanged: onDialCodeChanged,
-            phoneNumberValidator: (value) => phoneNumberValidator(context, value, dialCode),
+            phoneNumberValidator: (value) =>
+                phoneNumberValidator(context, value, dialCode),
           ),
           const SizedBox(height: 12),
           const Spacer(),
@@ -79,14 +79,15 @@ class FormContent extends StatelessWidget {
     return null;
   }
 
-  String? phoneNumberValidator(BuildContext context, String? phone, String dialCode) {
+  String? phoneNumberValidator(
+      BuildContext context, String? phone, String dialCode) {
     if (phone == null || phone.isEmpty) {
       return context.l10n.phoneNumberIsRequired;
     }
 
     final phoneNumberUtil = PhoneNumberUtil.instance;
     final regionCode =
-    phoneNumberUtil.getRegionCodeForCountryCode(int.parse(dialCode));
+        phoneNumberUtil.getRegionCodeForCountryCode(int.parse(dialCode));
 
     final phoneNumber = phoneNumberUtil.tryParsePhoneNumber(
       numberToParse: phone,

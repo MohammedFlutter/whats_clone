@@ -6,7 +6,6 @@ import 'package:whats_clone/core/routes/route_name.dart';
 import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/onboarding/onboarding_provider.dart';
 import 'package:whats_clone/view/constants/images.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/constants/uris.dart';
 import 'package:whats_clone/view/widgets/app_fill_button.dart';
 

@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whats_clone/l10n/app_localizations.dart';
 import 'package:whats_clone/state/providers/time_ago_provider.dart';
 import 'package:whats_clone/state/user_presence/model/user_presence.dart';
 import 'package:whats_clone/state/user_presence/service/user_presence_service.dart';
-import 'package:whats_clone/view/constants/strings.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final userPresenceServiceProvider =
     Provider<UserPresenceService>((ref) => UserPresenceServiceFirebase());

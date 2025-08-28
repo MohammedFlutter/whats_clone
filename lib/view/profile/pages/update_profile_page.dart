@@ -9,7 +9,6 @@ import 'package:whats_clone/state/image_upload/provider/image_picker_provider.da
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/profile/models/profile_state.dart';
 import 'package:whats_clone/state/profile/providers/profile_provider.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 import 'package:whats_clone/view/profile/widgets/form_content.dart';
 import 'package:whats_clone/view/widgets/app_snake_bar.dart';
 
@@ -76,7 +75,7 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title:  Text(
+          title: Text(
             context.l10n.editProfile,
           ),
         ),
@@ -124,7 +123,9 @@ class _UpdateProfilePageState extends ConsumerState<UpdateProfilePage> {
     final profileState = ref.read(imagePickerProvider);
     // if false, the image is  uploaded successfully or not selected
     if (!(profileState.file == null ||
-        ref.read(imagePickerProvider).status == UploadStatus.success)) return;
+        ref.read(imagePickerProvider).status == UploadStatus.success)) {
+      return;
+    }
     final user = ref.read(authProvider);
     final profile = widget.profile.copyWith(
       avatarUrl: avatarUrl,

@@ -3,7 +3,7 @@ description: "it's try to make whats app clone to apply concepts real time data"
 
 publish_to: 'none'
 
-version: 1.0.0+3
+version: 1.0.0+7
 
 environment:
   sdk: ^3.5.3

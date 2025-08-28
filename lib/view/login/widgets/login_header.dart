@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 
 class LoginHeader extends StatelessWidget {
   const LoginHeader({super.key});

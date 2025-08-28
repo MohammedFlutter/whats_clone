@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:whats_clone/core/theme/app_text_style.dart';
 import 'package:whats_clone/core/utils/extensions/localization_extension.dart';
 import 'package:whats_clone/state/image_upload/provider/image_picker_provider.dart';
-import 'package:whats_clone/view/constants/strings.dart';
 
 class PhotoBottomSheet extends ConsumerWidget {
   const PhotoBottomSheet({super.key});
@@ -24,7 +23,7 @@ class PhotoBottomSheet extends ConsumerWidget {
                 onPressed: () => context.pop(),
                 icon: const Icon(Icons.close),
               ),
-               Text(
+              Text(
                 context.l10n.profilePhoto,
                 style: AppTextStyles.subHeadline1,
               ),
@@ -37,16 +36,16 @@ class PhotoBottomSheet extends ConsumerWidget {
           Row(
             children: [
               _ProfileBottomSheetItem(
-                  onPressed:()async{
+                  onPressed: () async {
                     await imagePickerNotifier.captureImageFromCamera();
-                    if(context.mounted)context.pop();
+                    if (context.mounted) context.pop();
                   },
                   icon: Icons.camera_alt_outlined,
                   text: context.l10n.camera),
               _ProfileBottomSheetItem(
                   onPressed: () async {
                     await imagePickerNotifier.pickImageFromGallery();
-                    if(context.mounted)context.pop();
+                    if (context.mounted) context.pop();
                   },
                   icon: Icons.photo_outlined,
                   text: context.l10n.gallery),

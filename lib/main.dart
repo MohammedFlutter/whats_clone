@@ -11,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whats_clone/core/routes/app_router.dart';
 import 'package:whats_clone/core/secrets.dart';
 import 'package:whats_clone/core/theme/app_theme.dart';
+import 'package:whats_clone/l10n/app_localizations.dart';
 import 'package:whats_clone/state/chat/models/chat_profile.dart';
 import 'package:whats_clone/state/constants/hive_box_name.dart';
 import 'package:whats_clone/state/message/models/chat_messages.dart';
@@ -18,7 +19,6 @@ import 'package:whats_clone/state/message/models/message.dart';
 import 'package:whats_clone/state/notification/model/fcm_token.dart';
 import 'package:whats_clone/state/profile/models/profile.dart';
 import 'package:whats_clone/state/providers/theme_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -91,7 +91,6 @@ class MyApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: const Locale('ar'),
       supportedLocales: const [
         Locale('en'),
         Locale('ar'),
